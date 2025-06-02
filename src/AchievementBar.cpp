@@ -1,0 +1,140 @@
+#include <Geode/Geode.hpp>
+#include <Geode/modify/AchievementBar.hpp>
+
+using namespace geode::prelude;
+
+class $modify(AchievementBarAQ, AchievementBar) {
+
+	static inline const float delayTime = 1.2;
+	static inline const float fadeTime = 0.3;
+
+	struct Fields {
+        CCLabelBMFont* m_newTitleLabel;
+		TextArea* m_newAchievementDescription;
+		CCSprite* m_newAchievementSprite;
+    };
+
+	bool init(char const * title, char const * desc, char const * icon, bool isQuest) {
+
+		if (!AchievementBar::init(title, desc, icon, isQuest)) return false;
+		if (!isQuest) return true;
+
+		if (auto quest = getQuest(desc)) {
+			auto stats = GameStatsManager::sharedState();
+
+			// Find the new quest description and icon
+			std::string iconString = "GJ_timeIcon_001.png";
+			std::string newDesc = "New quest in 100hr.";
+			if (auto newQuest = stats->getQueuedChallenge(quest->m_position)) {
+				std::string typeString;
+				if ((int)newQuest->m_challengeType == 1) typeString = "Mana Orbs", iconString = "currencyOrbIcon_001.png";
+				else if ((int)newQuest->m_challengeType == 2) typeString = "Silver Coins", iconString = "GJ_coinsIcon2_001.png";
+				else if ((int)newQuest->m_challengeType >= 3) typeString = "Stars/Moons", iconString = "GJ_starsIcon_001.png";
+				newDesc = std::format("Collect {} {}.", (int)newQuest->m_goal, typeString);
+			} // if
+
+			// Save references
+			auto mainLayer = getChildByType<CCLayerColor>(0);
+			auto textNode = mainLayer->getChildByType<CCNode>(4);
+
+			// Create the new title
+			auto newTitleLabel = CCLabelBMFont::create("New Quest!", m_titleLabel->getFntFile());
+			newTitleLabel->setPosition(m_titleLabel->getPosition());
+			newTitleLabel->setScale(m_titleLabel->getScale());
+			newTitleLabel->setContentSize(m_titleLabel->getContentSize());
+			newTitleLabel->setAnchorPoint(m_titleLabel->getAnchorPoint());
+			newTitleLabel->setOpacity(0);
+			textNode->addChild(newTitleLabel);
+			m_fields->m_newTitleLabel = newTitleLabel;
+
+			// Create the new quest description
+			auto newAchievementDescription = TextArea::create(
+				newDesc,
+				m_achievementDescription->m_fontFile.c_str(),
+				m_achievementDescription->m_scale,
+				m_achievementDescription->m_width,
+				m_achievementDescription->m_anchorPoint,
+				m_achievementDescription->m_height,
+				m_achievementDescription->m_disableColor
+			);
+			newAchievementDescription->setPosition(m_achievementDescription->getPosition());
+			newAchievementDescription->setScale(m_achievementDescription->getScale());
+			newAchievementDescription->setContentSize(m_achievementDescription->getContentSize());
+			newAchievementDescription->setAnchorPoint(m_achievementDescription->getAnchorPoint());
+			newAchievementDescription->setOpacity(0);
+			textNode->addChild(newAchievementDescription);
+			m_fields->m_newAchievementDescription = newAchievementDescription;
+
+			// Create the new quest sprite
+			auto newAchievementSprite = CCSprite::createWithSpriteFrameName(iconString.c_str());
+			newAchievementSprite->setPosition(m_achievementSprite->getPosition());
+			newAchievementSprite->setScale(m_achievementSprite->getScale());
+			newAchievementSprite->setContentSize(m_achievementSprite->getContentSize());
+			newAchievementSprite->setAnchorPoint(m_achievementSprite->getAnchorPoint());
+			newAchievementSprite->setZOrder(m_achievementSprite->getZOrder());
+			newAchievementSprite->setOpacity(0);
+			mainLayer->addChild(newAchievementSprite);
+			m_fields->m_newAchievementSprite = newAchievementSprite;
+
+			// Setup fade out effects
+			m_titleLabel->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeOut::create(fadeTime)));
+			m_achievementSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeOut::create(fadeTime)));
+			m_achievementDescription->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeOut::create(fadeTime)));
+
+			// Setup fade in effects
+			newTitleLabel->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeIn::create(fadeTime)));
+			newAchievementSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeIn::create(fadeTime)));
+			newAchievementDescription->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeIn::create(fadeTime)));
+		} // if
+		return true;
+	} // init
+
+	void setOpacity(unsigned char alpha) {
+		AchievementBar::setOpacity(alpha);
+		if (m_fields->m_newTitleLabel) {
+			m_fields->m_newTitleLabel->setOpacity(alpha);
+			m_fields->m_newAchievementSprite->setOpacity(alpha);
+			m_fields->m_newAchievementDescription->setOpacity(alpha);
+
+			m_titleLabel->setOpacity(0);
+			m_achievementSprite->setOpacity(0);
+			m_achievementDescription->setOpacity(0);
+		} // if
+	} // setOpacity
+
+	GJChallengeItem* getQuest(char const * desc) {
+		int amount;
+		GJChallengeType type;
+
+		if (!parseQuestInfo(desc, &amount, &type)) {
+			log::error("Failed to parse quest info!");
+			return nullptr;
+		} // if
+
+		auto stats = GameStatsManager::sharedState();
+		for (int i = 1; i <= 3; i++) {
+			if (auto quest = stats->getChallenge(i)) {
+				if (quest->m_goal == amount && quest->m_challengeType == type) return quest;
+			} // if
+		} // for
+
+		log::error("Failed to find the specified quest!");
+		return nullptr;
+	} // getQuest
+
+	bool parseQuestInfo(char const * desc, int * amount, GJChallengeType * type) {
+		int amountInt;
+		std::string typeString;
+
+		std::stringstream ss(desc);
+		ss >> typeString >> amountInt >> typeString;
+
+		if (typeString == "Mana") *type = GJChallengeType::Orbs;
+		else if (typeString == "Silver") *type = GJChallengeType::UserCoins;
+		else if (typeString == "Stars/Moons.") *type = GJChallengeType::Stars;
+		else *type = GJChallengeType::Unknown;
+
+		*amount = amountInt;
+		return *type != GJChallengeType::Unknown;
+	} // parseQuestInfo
+};
