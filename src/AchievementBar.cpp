@@ -24,18 +24,18 @@ class $modify(AchievementBarAQ, AchievementBar) {
 
 			// Find the new quest description and icon
 			std::string iconString = "GJ_timeIcon_001.png";
-			std::string newDesc = "New quest in 69h 69min.";
+			std::string newDesc = "New quest in ";
 			if (auto newQuest = stats->getQueuedChallenge(quest->m_position)) {
 				std::string typeString;
 				if ((int)newQuest->m_challengeType == 1) typeString = "Mana Orbs", iconString = "currencyOrbIcon_001.png";
 				else if ((int)newQuest->m_challengeType == 2) typeString = "Silver Coins", iconString = "GJ_coinsIcon2_001.png";
 				else if ((int)newQuest->m_challengeType >= 3) typeString = "Stars/Moons", iconString = "GJ_starsIcon_001.png";
-				newDesc = std::format("Collect {} {}.", (int)newQuest->m_goal, typeString);
+				newDesc = "Collect " + std::to_string((int)newQuest->m_goal) + " " + typeString + ".";
 			} else {
 				auto currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 				int hours = (stats->m_challengeTime - currentTime) / 3600;
 				int minutes = (stats->m_challengeTime - currentTime) / 60 - hours * 60;
-				newDesc = std::format("New quest in {}h {}min.", hours, minutes);
+				newDesc += std::to_string(hours) + "h " + std::to_string(minutes) + "min.";
 			} // if
 
 			// Save references
