@@ -3,10 +3,10 @@
 
 using namespace geode::prelude;
 
-class $modify(AchievementBarAQ, AchievementBar) {
+const float delayTime = 1.3;
+const float fadeTime = 0.3;
 
-	static inline const float delayTime = 1.2;
-	static inline const float fadeTime = 0.3;
+class $modify(AchievementBarAQ, AchievementBar) {
 
 	struct Fields {
         CCLabelBMFont* m_newTitleLabel;
@@ -42,7 +42,7 @@ class $modify(AchievementBarAQ, AchievementBar) {
 			auto mainLayer = getChildByType<CCLayerColor>(0);
 			auto textNode = mainLayer->getChildByType<CCNode>(4);
 
-			// Create the new title
+			// Create the new quest title
 			auto newTitleLabel = CCLabelBMFont::create("New Quest!", m_titleLabel->getFntFile());
 			newTitleLabel->setPosition(m_titleLabel->getPosition());
 			newTitleLabel->setScale(m_titleLabel->getScale());
@@ -74,7 +74,6 @@ class $modify(AchievementBarAQ, AchievementBar) {
 			auto newAchievementSprite = CCSprite::createWithSpriteFrameName(iconString.c_str());
 			newAchievementSprite->setPosition(m_achievementSprite->getPosition());
 			newAchievementSprite->setScale(m_achievementSprite->getScale());
-			newAchievementSprite->setContentSize(m_achievementSprite->getContentSize());
 			newAchievementSprite->setAnchorPoint(m_achievementSprite->getAnchorPoint());
 			newAchievementSprite->setZOrder(m_achievementSprite->getZOrder());
 			newAchievementSprite->setOpacity(0);

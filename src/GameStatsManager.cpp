@@ -8,8 +8,6 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 	static inline int totalRewards = 0;
 
 	// BEFORE SHOW NEW BEST
-	// DONT FORGET TO CHANGE TO VOID IN SOURCE
-	// ALSO VOID FOR PROCESSCHALLENGEQUEUE
 	void incrementChallenge(GJChallengeType type, int amount) {
 		GameStatsManager::incrementChallenge(type, amount);
 
