@@ -9,7 +9,11 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 
 	// BEFORE SHOW NEW BEST
 	void incrementChallenge(GJChallengeType type, int amount) {
-		GameStatsManager::incrementChallenge(type, amount);
+		for (int i = 1; i <= 3; i++) {
+			if (!getChallenge(i)) processChallengeQueue(i);
+		} // for
+
+ 		GameStatsManager::incrementChallenge(type, amount);
 
 		totalRewards = 0;
 		for (int i = 1; i <= 3; i++) {
