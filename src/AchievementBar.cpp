@@ -6,7 +6,7 @@ using namespace geode::prelude;
 const float delayTime = 1.3;
 const float fadeTime = 0.3;
 
-class $modify(AchievementBarAQ, AchievementBar) {
+class $modify(AchievementBar) {
 
 	struct Fields {
         CCLabelBMFont* m_newTitleLabel;

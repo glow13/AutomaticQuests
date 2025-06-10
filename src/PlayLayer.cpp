@@ -4,12 +4,11 @@
 
 using namespace geode::prelude;
 
-class $modify(PlayLayerAQ, PlayLayer) {
+class $modify(PlayLayer) {
 
 	// AFTER INCREMENT CHALLENGE
 	void showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
-		int newDiamonds = diamonds + GameStatsManagerAQ::totalRewards;
+		int newDiamonds = diamonds + GSM::getQuestRewards();
 		PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
-		GameStatsManagerAQ::totalRewards = 0;
 	} // showNewBest
 };
