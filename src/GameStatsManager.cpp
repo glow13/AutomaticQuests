@@ -1,36 +1,21 @@
-#include <Geode/Geode.hpp>
-#include <Geode/modify/GameStatsManager.hpp>
+#include "GameStatsManager.hpp"
 
-using namespace geode::prelude;
+// BEFORE SHOW NEW BEST
+void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
+	for (int i = 1; i <= 3; i++) {
+		if (!getChallenge(i)) processChallengeQueue(i);
+	} // for
 
-class $modify(GSM, GameStatsManager) {
+	GameStatsManager::incrementChallenge(type, amount);
 
-	inline static int s_totalRewards = 0;
+	for (int i = 1; i <= 3; i++) {
+		auto quest = getChallenge(i);
+		if (quest && quest->m_challengeType == type && quest->m_canClaim) {
+			processChallengeQueue(i);
 
-	// BEFORE SHOW NEW BEST
-	void incrementChallenge(GJChallengeType type, int amount) {
-		for (int i = 1; i <= 3; i++) {
-			if (!getChallenge(i)) processChallengeQueue(i);
-		} // for
-
- 		GameStatsManager::incrementChallenge(type, amount);
-
-		s_totalRewards = 0;
-		for (int i = 1; i <= 3; i++) {
-			auto quest = getChallenge(i);
-			if (quest && quest->m_challengeType == type && quest->m_canClaim) {
-				processChallengeQueue(i);
-
-				s_totalRewards += quest->m_reward;
-				incrementStat("13", quest->m_reward);
-				log::info("automatically claimed quest #{}!", i);
-			} // if
-		} // for
-	} // incrementChallenge
-
-	static int getQuestRewards() {
-		int rewardsNum = s_totalRewards;
-		s_totalRewards = 0;
-		return rewardsNum;
-	} // getQuestRewards
-};
+			s_totalRewards += quest->m_reward;
+			incrementStat("13", quest->m_reward);
+			log::info("automatically claimed quest #{}!", i);
+		} // if
+	} // for
+} // incrementChallenge

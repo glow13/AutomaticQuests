@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PlayLayer.hpp>
-#include "GameStatsManager.cpp"
+#include "GameStatsManager.hpp"
 
 using namespace geode::prelude;
 
@@ -11,4 +11,8 @@ class $modify(PlayLayer) {
 		int newDiamonds = diamonds + GSM::getQuestRewards();
 		PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
 	} // showNewBest
+			(CurrencyRewardType)0, 0, 1
+		);
+		addChild(rewardLayer);
+	} // levelComplete
 };
