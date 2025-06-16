@@ -2,10 +2,6 @@
 
 // BEFORE SHOW NEW BEST
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
-	for (int i = 1; i <= 3; i++) {
-		if (!getChallenge(i)) processChallengeQueue(i);
-	} // for
-
 	GameStatsManager::incrementChallenge(type, amount);
 
 	for (int i = 1; i <= 3; i++) {
@@ -15,7 +11,7 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 
 			s_totalRewards += quest->m_reward;
 			incrementStat("13", quest->m_reward);
-			log::info("automatically claimed quest #{}!", i);
+			log::info("Automatically claimed quest #{}!", i);
 		} // if
 	} // for
 } // incrementChallenge

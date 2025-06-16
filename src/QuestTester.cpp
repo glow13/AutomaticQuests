@@ -31,14 +31,14 @@ class $modify(ChallengesPageAQ, ChallengesPage) {
 		auto stats = GameStatsManager::sharedState();
 
 		log::info("adding quests");
-		auto item1 = GJChallengeItem_create(GJChallengeType::Orbs, 1, 10, 1, "Amazing Quest");
-		GameStatsManager_storeChallenge(stats, 1, item1);
+		auto item1 = GJChallengeItem::create(GJChallengeType::Orbs, 1, 10, 1, "Amazing Quest");
+		stats->storeQueuedChallenge(1, item1);
 
-		auto item2 = GJChallengeItem_create(GJChallengeType::Stars, 1, 15, 1, "Fantastic Quest");
-		GameStatsManager_storeChallenge(stats, 2, item2);
+		auto item2 = GJChallengeItem::create(GJChallengeType::Stars, 1, 15, 1, "Fantastic Quest");
+		stats->storeQueuedChallenge(2, item2);
 
-		auto item3 = GJChallengeItem_create(GJChallengeType::Orbs, 2, 20, 1, "Impossible Quest");
-		GameStatsManager_storeChallenge(stats, 3, item3);
+		auto item3 = GJChallengeItem::create(GJChallengeType::Orbs, 2, 20, 1, "Impossible Quest");
+		stats->storeQueuedChallenge(3, item3);
 
 		onClose(sender);
 	} // onButton
@@ -59,21 +59,12 @@ class $modify(ChallengesPageAQ, ChallengesPage) {
 		notifier->notifyAchievement("Quest Complete!", "Collect 1 Mana Orbs.", "currencyOrbIcon_001.png", true);
 	} // onButton3
 
-	static GJChallengeItem* GJChallengeItem_create(GJChallengeType challengeType, int goal, int reward, int timeLeft, gd::string questName) {
-		static tulip::hook::WrapperMetadata metadata;
-		metadata.m_convention = geode::hook::createConvention(tulip::hook::TulipConvention::Fastcall);
-		metadata.m_abstract = tulip::hook::AbstractFunction::from(&ChallengesPageAQ::GJChallengeItem_create);
-		static auto original = geode::hook::createWrapper(reinterpret_cast<void*>(geode::base::get() + 0x1f1520), metadata);
-		auto func = reinterpret_cast<GJChallengeItem*(*)(GJChallengeType, int, int, int, gd::string)>(original.unwrap());
-		return func(challengeType, goal, reward, timeLeft, questName);
-	} // GJChallengeItem_create
-
-	static void GameStatsManager_storeChallenge(GameStatsManager * self, int p0, GJChallengeItem * p1) {
-		static tulip::hook::WrapperMetadata metadata;
-		metadata.m_convention = geode::hook::createConvention(tulip::hook::TulipConvention::Thiscall);
-		metadata.m_abstract = tulip::hook::AbstractFunction::from(&ChallengesPageAQ::GameStatsManager_storeChallenge);
-		static auto original = geode::hook::createWrapper(reinterpret_cast<void*>(geode::base::get() + 0x1ded90), metadata);
-		auto func = reinterpret_cast<void(*)(GameStatsManager*, int, GJChallengeItem*)>(original.unwrap());
-		func(self, p0, p1);
-	} // GameStatsManager_storeChallenge
+	// static void GameStatsManager_storeChallenge(GameStatsManager * self, int p0, GJChallengeItem * p1) {
+	// 	static tulip::hook::WrapperMetadata metadata;
+	// 	metadata.m_convention = geode::hook::createConvention(tulip::hook::TulipConvention::Thiscall);
+	// 	metadata.m_abstract = tulip::hook::AbstractFunction::from(&ChallengesPageAQ::GameStatsManager_storeChallenge);
+	// 	static auto original = geode::hook::createWrapper(reinterpret_cast<void*>(geode::base::get() + 0x1ded90), metadata);
+	// 	auto func = reinterpret_cast<void(*)(GameStatsManager*, int, GJChallengeItem*)>(original.unwrap());
+	// 	func(self, p0, p1);
+	// } // GameStatsManager_storeChallenge
 };
