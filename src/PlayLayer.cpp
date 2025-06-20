@@ -11,19 +11,4 @@ class $modify(PlayLayer) {
 		int newDiamonds = diamonds + GameStatsManagerAQ::getQuestRewards();
 		PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
 	} // showNewBest
-
-	void levelComplete() {
-		PlayLayer::levelComplete();
-
-		auto screenSize = CCDirector::sharedDirector()->getWinSize();
-		auto rewardLayer = CurrencyRewardLayer::create(
-			0, 0, 0,
-			GameStatsManagerAQ::getQuestRewards(), 
-			(CurrencySpriteType)0, 0,
-			(CurrencySpriteType)0, 0,
-			screenSize,
-			(CurrencyRewardType)0, 0, 1
-		);
-		addChild(rewardLayer);
-	} // levelComplete
 };
