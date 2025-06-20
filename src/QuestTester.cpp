@@ -57,6 +57,21 @@ class $modify(ChallengesPageAQ, ChallengesPage) {
 	void onButton3(CCObject* sender) {
 		auto notifier = AchievementNotifier::sharedState();
 		notifier->notifyAchievement("Quest Complete!", "Collect 1 Mana Orbs.", "currencyOrbIcon_001.png", true);
+
+		auto stats = GameStatsManager::sharedState();
+		auto challengeDiamonds = stats->m_challengeDiamonds;
+		auto keys = challengeDiamonds->allKeys();
+		for (int i = 0; i < keys->count(); i++) {
+			auto key = static_cast<CCString*>(keys->objectAtIndex(i))->getCString();
+			auto object = static_cast<CCString*>(challengeDiamonds->objectForKey(key))->intValue();
+			if (key[0] == 'c') log::info("{} {}", key, object);
+		} // for
+
+		for (int i = 1; i <= 3; i++) if (auto quest = stats->getChallenge(i)) {
+			auto key = CCString::createWithFormat("c%i%i", (int)quest->m_position, (int)quest->m_timeLeft);
+			log::info("key {}: {}", i, key->getCString());
+		} // for
+		log::info("length: {}", keys->count());
 	} // onButton3
 
 	// static void GameStatsManager_storeChallenge(GameStatsManager * self, int p0, GJChallengeItem * p1) {
