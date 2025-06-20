@@ -1,4 +1,4 @@
-#include "GameStatsManager.hpp"
+#include "AutomaticQuestManager.hpp"
 
 int GameStatsManagerAQ::s_totalRewards = 0;
 
@@ -32,3 +32,19 @@ int GameStatsManagerAQ::getQuestRewards() {
 	log::info("resetting rewards from {}", rewardsNum);
 	return rewardsNum;
 } // getQuestRewards
+
+bool MenuLayerAQ::init() {
+	if (!MenuLayer::init()) return false;
+
+	// Check if quests are already loaded
+	auto stats = GameStatsManager::sharedState();
+	if (stats->m_challengeTime > 0) return true;
+
+	// Load quests if not already loaded
+	log::info("Loading active quests...");
+	auto questLayer = ChallengesPage::create();
+	questLayer->onClose(questLayer);
+	questLayer->release();
+
+	return true;
+} // init

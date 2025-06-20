@@ -1,4 +1,16 @@
-#include "AchievementBar.hpp"
+#include "AutomaticQuestUI.hpp"
+
+// AFTER INCREMENT CHALLENGE
+void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
+	int newDiamonds = diamonds + GameStatsManagerAQ::getQuestRewards();
+	PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
+} // showNewBest
+
+// AFTER INCREMENT CHALLENGE
+void EndLevelLayerAQ::playEndEffect() {
+	m_diamonds += GameStatsManagerAQ::getQuestRewards();
+	EndLevelLayer::playEndEffect();
+} // playEndEffect
 
 bool AchievementBarAQ::init(char const * title, char const * desc, char const * icon, bool isQuest) {
 
