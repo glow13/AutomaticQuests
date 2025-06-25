@@ -27,11 +27,9 @@ class $modify(AchievementBarAQ, AchievementBar) {
 };
 
 class $modify(PlayLayerAQ, PlayLayer) {
-public:
 	void showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle);
 };
 
 class $modify(EndLevelLayerAQ, EndLevelLayer) {
-public:
 	void playEndEffect();
 };

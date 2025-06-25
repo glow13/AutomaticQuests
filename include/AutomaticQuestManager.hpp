@@ -7,7 +7,6 @@
 using namespace geode::prelude;
 
 class $modify(GameStatsManagerAQ, GameStatsManager) {
-public:
 	struct Fields {
         int m_totalRewards = 0;
     };
@@ -23,6 +22,5 @@ public:
 };
 
 class $modify(MenuLayerAQ, MenuLayer) {
-public:
     bool init();
 };
