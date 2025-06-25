@@ -1,7 +1,5 @@
 #include "AutomaticQuestManager.hpp"
 
-int GameStatsManagerAQ::s_totalRewards = 0;
-
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
 
@@ -13,7 +11,7 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 			m_challengeDiamonds->setObject(object, key);
 			processChallengeQueue(i);
 
-			s_totalRewards += quest->m_reward;
+			m_fields->m_totalRewards += quest->m_reward;
 			incrementStat("13", quest->m_reward);
 			log::info("Automatically claimed quest #{}!", i);
 		} // if
@@ -27,8 +25,10 @@ gd::string GameStatsManagerAQ::getChallengeKey(GJChallengeItem* quest) {
 
 // Resets the rewards to zero after use
 int GameStatsManagerAQ::getQuestRewards() {
-	int rewardsNum = s_totalRewards;
-	s_totalRewards = 0;
+	if (m_fields->m_totalRewards < 1) return 0;
+	
+	int rewardsNum = m_fields->m_totalRewards;
+	m_fields->m_totalRewards = 0;
 	log::info("resetting rewards from {}", rewardsNum);
 	return rewardsNum;
 } // getQuestRewards

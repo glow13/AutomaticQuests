@@ -2,13 +2,15 @@
 
 // AFTER INCREMENT CHALLENGE
 void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
-	int newDiamonds = diamonds + GameStatsManagerAQ::getQuestRewards();
+	auto stats = GameStatsManagerAQ::sharedState();
+	int newDiamonds = diamonds + stats->getQuestRewards();
 	PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
 } // showNewBest
 
 // AFTER INCREMENT CHALLENGE
 void EndLevelLayerAQ::playEndEffect() {
-	m_diamonds += GameStatsManagerAQ::getQuestRewards();
+	auto stats = GameStatsManagerAQ::sharedState();
+	m_diamonds += stats->getQuestRewards();
 	EndLevelLayer::playEndEffect();
 } // playEndEffect
 
