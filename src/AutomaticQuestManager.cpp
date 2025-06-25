@@ -1,22 +1,19 @@
 #include "AutomaticQuestManager.hpp"
 
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
-	log::info("GameStatsManager::incrementChallenge");
 	GameStatsManager::incrementChallenge(type, amount);
 
 	for (int i = 1; i <= 3; i++) {
 		auto quest = getChallenge(i);
 		if (quest && quest->m_challengeType == type && quest->m_canClaim) {
-			int reward = quest->m_reward.value();
 			auto key = getChallengeKey(quest);
-			auto object = CCString::create(std::to_string(reward));
+			auto object = CCString::create(std::to_string(quest->m_reward));
 			m_challengeDiamonds->setObject(object, key);
 			processChallengeQueue(i);
 
-			m_fields->m_totalRewards += reward;
-			incrementStat("13", reward);
+			m_fields->m_totalRewards += quest->m_reward;
+			incrementStat("13", quest->m_reward);
 			log::info("Automatically claimed quest #{}!", i);
-			log::info("rewards = {} {}", m_fields->m_totalRewards, reward);
 		} // if
 	} // for
 } // incrementChallenge
@@ -28,8 +25,8 @@ gd::string GameStatsManagerAQ::getChallengeKey(GJChallengeItem* quest) {
 
 // Resets the rewards to zero after use
 int GameStatsManagerAQ::getQuestRewards() {
-	//if (m_fields->m_totalRewards < 1) return 0;
-
+	if (m_fields->m_totalRewards < 1) return 0;
+	
 	int rewardsNum = m_fields->m_totalRewards;
 	m_fields->m_totalRewards = 0;
 	log::info("resetting rewards from {}", rewardsNum);

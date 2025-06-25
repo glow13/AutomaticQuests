@@ -2,24 +2,16 @@
 
 // AFTER INCREMENT CHALLENGE
 void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
-	log::info("PlayLayer::showNewBest");
 	auto stats = GameStatsManagerAQ::sharedState();
-	int rewards = stats->getQuestRewards();
-	log::info("rewards = {}", rewards);
-	int newDiamonds = diamonds + rewards;
+	int newDiamonds = diamonds + stats->getQuestRewards();
 	PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
 } // showNewBest
 
 // AFTER INCREMENT CHALLENGE
 void EndLevelLayerAQ::playEndEffect() {
-	log::info("EndLevelLayer::playEndEffect");
 	auto stats = GameStatsManagerAQ::sharedState();
-	int rewards = stats->getQuestRewards();
-	log::info("rewards = {}", rewards);
-	m_diamonds += rewards;
-	log::info("before diamonds = {}", m_diamonds);
+	m_diamonds += stats->getQuestRewards();
 	EndLevelLayer::playEndEffect();
-	log::info("after diamonds = {}", m_diamonds);
 } // playEndEffect
 
 bool AchievementBarAQ::init(char const * title, char const * desc, char const * icon, bool isQuest) {
