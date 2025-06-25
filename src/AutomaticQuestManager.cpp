@@ -7,15 +7,16 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	for (int i = 1; i <= 3; i++) {
 		auto quest = getChallenge(i);
 		if (quest && quest->m_challengeType == type && quest->m_canClaim) {
+			int reward = quest->m_reward.value();
 			auto key = getChallengeKey(quest);
-			auto object = CCString::create(std::to_string(quest->m_reward));
+			auto object = CCString::create(std::to_string(reward));
 			m_challengeDiamonds->setObject(object, key);
 			processChallengeQueue(i);
 
-			m_fields->m_totalRewards += quest->m_reward;
-			incrementStat("13", quest->m_reward);
+			m_fields->m_totalRewards += reward;
+			incrementStat("13", reward);
 			log::info("Automatically claimed quest #{}!", i);
-			log::info("rewards = {} {}", m_fields->m_totalRewards, quest->m_reward);
+			log::info("rewards = {} {}", m_fields->m_totalRewards, reward);
 		} // if
 	} // for
 } // incrementChallenge
