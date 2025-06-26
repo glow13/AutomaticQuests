@@ -10,5 +10,17 @@
 	"name": "Automatic Quests",
 	"version": "v1.0.0",
 	"developer": "glow12",
-	"description": "Never forget to claim a quest again!"
+	"description": "Never forget to claim a quest again!",
+	"links": {
+		"source": "https://github.com/glow13/AutomaticQuests"
+	},
+	"issues": {
+		"info": "You can report issues on the mod's Github page!",
+		"url": "https://github.com/glow13/AutomaticQuests/issues"
+	},
+	"tags": [
+		"universal",
+		"enhancement",
+		"interface"
+	]
 }
