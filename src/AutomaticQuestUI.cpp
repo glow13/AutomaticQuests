@@ -1,18 +1,28 @@
 #include "AutomaticQuestUI.hpp"
 
-// AFTER INCREMENT CHALLENGE
+// Excecutes after GameStatsManagerAQ::incrementChallenge
 void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
 	auto stats = GameStatsManagerAQ::sharedState();
 	int newDiamonds = diamonds + stats->getQuestRewards();
 	PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
 } // showNewBest
 
-// AFTER INCREMENT CHALLENGE
-void EndLevelLayerAQ::playEndEffect() {
+// Excecutes after GameStatsManagerAQ::incrementChallenge
+void EndLevelLayerAQ::playDiamondEffect(float time) {
+	int oldDiamonds = m_playLayer->m_diamonds;
+	m_playLayer->m_diamonds = m_diamonds;
+	EndLevelLayer::playDiamondEffect(time);
+	m_playLayer->m_diamonds = oldDiamonds;
+} // playDiamondEffect
+
+// Excecutes after GameStatsManagerAQ::incrementChallenge
+void EndLevelLayerAQ::customSetup() {
+	int oldDiamonds = m_playLayer->m_diamonds;
 	auto stats = GameStatsManagerAQ::sharedState();
-	m_diamonds += stats->getQuestRewards();
-	EndLevelLayer::playEndEffect();
-} // playEndEffect
+	m_playLayer->m_diamonds += stats->getQuestRewards();
+	EndLevelLayer::customSetup();
+	m_playLayer->m_diamonds = oldDiamonds;
+} // customSetup
 
 bool AchievementBarAQ::init(char const * title, char const * desc, char const * icon, bool isQuest) {
 
@@ -125,7 +135,7 @@ GJChallengeItem* AchievementBarAQ::getQuest(char const * desc) {
 	auto stats = GameStatsManager::sharedState();
 	for (int i = 1; i <= 3; i++) {
 		if (auto quest = stats->getChallenge(i)) {
-			if (quest->m_goal == amount && quest->m_challengeType == type) return quest;
+			if ((int)quest->m_goal == amount && quest->m_challengeType == type) return quest;
 		} // if
 	} // for
 

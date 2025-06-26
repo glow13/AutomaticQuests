@@ -15,7 +15,7 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 	gd::string getChallengeKey(GJChallengeItem* quest);
 	int getQuestRewards();
 
-	static GameStatsManagerAQ* sharedState() {
+	static inline GameStatsManagerAQ* sharedState() {
 		auto stats = GameStatsManager::sharedState();
 		return static_cast<GameStatsManagerAQ*>(stats);
 	} // sharedState

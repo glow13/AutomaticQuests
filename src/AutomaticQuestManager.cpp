@@ -2,24 +2,28 @@
 
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
+	if ((int)type == 1) m_fields->m_totalRewards = 0;
 
+	// Check if this completed any quests
 	for (int i = 1; i <= 3; i++) {
 		auto quest = getChallenge(i);
 		if (quest && quest->m_challengeType == type && quest->m_canClaim) {
 			int reward = quest->m_reward.value();
-			auto key = getChallengeKey(quest);
-			auto object = CCString::create(std::to_string(reward));
-			m_challengeDiamonds->setObject(object, key);
-			processChallengeQueue(i);
-
 			m_fields->m_totalRewards += reward;
 			incrementStat("13", reward);
+
+			// Add challenge diamonds
+			auto key = getChallengeKey(quest);
+			auto object = CCString::createWithFormat("%i", reward);
+			m_challengeDiamonds->setObject(object, key);
+
+			processChallengeQueue(i);
 			log::info("Automatically claimed quest #{}!", i);
 		} // if
 	} // for
 } // incrementChallenge
 
-// Had to rewrite from scratch because its inlined on Windows :/
+// Same implementation as GameStatsManager::getChallengeKey
 gd::string GameStatsManagerAQ::getChallengeKey(GJChallengeItem* quest) {
 	return fmt::format("c{}{}", quest->m_position, quest->m_timeLeft);
 } // getChallengeKey
@@ -27,10 +31,9 @@ gd::string GameStatsManagerAQ::getChallengeKey(GJChallengeItem* quest) {
 // Resets the rewards to zero after use
 int GameStatsManagerAQ::getQuestRewards() {
 	if (m_fields->m_totalRewards < 1) return 0;
-	
+
 	int rewardsNum = m_fields->m_totalRewards;
 	m_fields->m_totalRewards = 0;
-	log::info("resetting rewards from {}", rewardsNum);
 	return rewardsNum;
 } // getQuestRewards
 
@@ -44,7 +47,7 @@ bool MenuLayerAQ::init() {
 	// Load quests if not already loaded
 	log::info("Loading active quests...");
 	auto questLayer = ChallengesPage::create();
-	questLayer->onClose(questLayer);
+	questLayer->onClose(nullptr);
 	questLayer->release();
 
 	return true;

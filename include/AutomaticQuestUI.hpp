@@ -31,5 +31,6 @@ class $modify(PlayLayerAQ, PlayLayer) {
 };
 
 class $modify(EndLevelLayerAQ, EndLevelLayer) {
-	void playEndEffect();
+	void playDiamondEffect(float time);
+	void customSetup();
 };
