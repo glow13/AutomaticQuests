@@ -8,11 +8,13 @@ using namespace geode::prelude;
 
 class $modify(GameStatsManagerAQ, GameStatsManager) {
 	struct Fields {
-        int m_totalRewards = 0;
-    };
+		int m_totalRewards = 0;
+		bool m_completed[4] = {false, false, false, false};
+	};
 
 	void incrementChallenge(GJChallengeType type, int amount);
 	gd::string getChallengeKey(GJChallengeItem* quest);
+	void resetQuestRewards();
 	int getQuestRewards();
 
 	static inline GameStatsManagerAQ* sharedState() {

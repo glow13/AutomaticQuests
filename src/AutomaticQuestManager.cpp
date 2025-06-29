@@ -2,14 +2,16 @@
 
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
-	if ((int)type == 1) m_fields->m_totalRewards = 0;
+	if ((int)type == 1) resetQuestRewards();
 
 	// Check if this completed any quests
 	for (int i = 1; i <= 3; i++) {
 		auto quest = getChallenge(i);
-		if (quest && quest->m_challengeType == type && quest->m_canClaim) {
+		if (quest && m_fields->m_completed[i]) quest->m_count = 0;
+		else if (quest && quest->m_challengeType == type && quest->m_canClaim) {
 			int reward = quest->m_reward.value();
 			m_fields->m_totalRewards += reward;
+			m_fields->m_completed[i] = true;
 			incrementStat("13", reward);
 
 			// Add challenge diamonds
@@ -28,12 +30,20 @@ gd::string GameStatsManagerAQ::getChallengeKey(GJChallengeItem* quest) {
 	return fmt::format("c{}{}", quest->m_position, quest->m_timeLeft);
 } // getChallengeKey
 
+void GameStatsManagerAQ::resetQuestRewards() {
+	m_fields->m_totalRewards = 0;
+
+	m_fields->m_completed[1] = false;
+	m_fields->m_completed[2] = false;
+	m_fields->m_completed[3] = false;
+} // resetQuestRewards
+
 // Resets the rewards to zero after use
 int GameStatsManagerAQ::getQuestRewards() {
 	if (m_fields->m_totalRewards < 1) return 0;
 
 	int rewardsNum = m_fields->m_totalRewards;
-	m_fields->m_totalRewards = 0;
+	resetQuestRewards();
 	return rewardsNum;
 } // getQuestRewards
 
