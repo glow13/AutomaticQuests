@@ -14,8 +14,8 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 
 	void incrementChallenge(GJChallengeType type, int amount);
 	gd::string getChallengeKey(GJChallengeItem* quest);
+	int getQuestRewardsAndReset();
 	void resetQuestRewards();
-	int getQuestRewards();
 
 	static inline GameStatsManagerAQ* sharedState() {
 		auto stats = GameStatsManager::sharedState();

@@ -3,26 +3,37 @@
 // Excecutes after GameStatsManagerAQ::incrementChallenge
 void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
 	auto stats = GameStatsManagerAQ::sharedState();
-	int newDiamonds = diamonds + stats->getQuestRewards();
+	int newDiamonds = diamonds + stats->getQuestRewardsAndReset();
 	PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
 } // showNewBest
 
 // Excecutes after GameStatsManagerAQ::incrementChallenge
+void EndLevelLayerAQ::customSetup() {
+
+	// See if any diamonds were earned from quests
+	auto stats = GameStatsManagerAQ::sharedState();
+	int questDiamonds = stats->getQuestRewardsAndReset();
+
+	// Trick the EndLevelLayer to display the quest diamonds
+	int diamonds = m_playLayer->m_diamonds;
+	m_playLayer->m_diamonds += questDiamonds;
+	EndLevelLayer::customSetup();
+	m_playLayer->m_diamonds = diamonds;
+
+	// Make sure the quest diamonds still show if no stars were earned
+	if (questDiamonds > 0 && m_starsPosition.isZero()) {
+		m_diamondsPosition = CCPoint(404.5, 160);
+		m_starsPosition = CCPoint(404.5, 160);
+	} // if
+} // customSetup
+
+// Excecutes after EndLevelLayerAQ::customSetup
 void EndLevelLayerAQ::playDiamondEffect(float time) {
-	int oldDiamonds = m_playLayer->m_diamonds;
+	int diamonds = m_playLayer->m_diamonds;
 	m_playLayer->m_diamonds = m_diamonds;
 	EndLevelLayer::playDiamondEffect(time);
-	m_playLayer->m_diamonds = oldDiamonds;
+	m_playLayer->m_diamonds = diamonds;
 } // playDiamondEffect
-
-// Excecutes after GameStatsManagerAQ::incrementChallenge
-void EndLevelLayerAQ::customSetup() {
-	int oldDiamonds = m_playLayer->m_diamonds;
-	auto stats = GameStatsManagerAQ::sharedState();
-	m_playLayer->m_diamonds += stats->getQuestRewards();
-	EndLevelLayer::customSetup();
-	m_playLayer->m_diamonds = oldDiamonds;
-} // customSetup
 
 bool AchievementBarAQ::init(char const * title, char const * desc, char const * icon, bool isQuest) {
 

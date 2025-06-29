@@ -39,7 +39,7 @@ void GameStatsManagerAQ::resetQuestRewards() {
 } // resetQuestRewards
 
 // Resets the rewards to zero after use
-int GameStatsManagerAQ::getQuestRewards() {
+int GameStatsManagerAQ::getQuestRewardsAndReset() {
 	if (m_fields->m_totalRewards < 1) return 0;
 
 	int rewardsNum = m_fields->m_totalRewards;
