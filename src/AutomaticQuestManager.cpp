@@ -3,6 +3,7 @@
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
 	if ((int)type == 1) resetQuestRewards();
+	if (isModDisabled()) return;
 
 	// Check if this completed any quests
 	for (int i = 1; i <= 3; i++) {
@@ -47,8 +48,10 @@ int GameStatsManagerAQ::getQuestRewardsAndReset() {
 	return rewardsNum;
 } // getQuestRewards
 
+// Kinda scuffed but it works so yeah
 bool MenuLayerAQ::init() {
 	if (!MenuLayer::init()) return false;
+	if (isModDisabled()) return true;
 
 	// Check if quests are already loaded
 	auto stats = GameStatsManager::sharedState();

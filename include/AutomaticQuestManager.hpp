@@ -26,3 +26,11 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 class $modify(MenuLayerAQ, MenuLayer) {
     bool init();
 };
+
+inline bool isModDisabled() {
+	return Mod::get()->getSettingValue<bool>("disable-mod");
+} // isModEnabled
+
+inline bool isFeatureDisabled(gd::string setting) {
+	return isModDisabled() || Mod::get()->getSettingValue<bool>(setting);
+} // isSettingEnabled

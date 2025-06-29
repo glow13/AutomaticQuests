@@ -2,6 +2,11 @@
 
 // Excecutes after GameStatsManagerAQ::incrementChallenge
 void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
+	if (isFeatureDisabled("quest-diamonds")) {
+		PlayLayer::showNewBest(newReward, orbs, diamonds, demonKey, noRetry, noTitle);
+		return;
+	} // if
+
 	auto stats = GameStatsManagerAQ::sharedState();
 	int newDiamonds = diamonds + stats->getQuestRewardsAndReset();
 	PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
@@ -9,6 +14,10 @@ void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demon
 
 // Excecutes after GameStatsManagerAQ::incrementChallenge
 void EndLevelLayerAQ::customSetup() {
+	if (isFeatureDisabled("quest-diamonds")) {
+		EndLevelLayer::customSetup();
+		return;
+	} // if
 
 	// See if any diamonds were earned from quests
 	auto stats = GameStatsManagerAQ::sharedState();
@@ -38,6 +47,7 @@ void EndLevelLayerAQ::playDiamondEffect(float time) {
 bool AchievementBarAQ::init(char const * title, char const * desc, char const * icon, bool isQuest) {
 
 	if (!AchievementBar::init(title, desc, icon, isQuest)) return false;
+	if (isFeatureDisabled("quest-preview")) return true;
 	if (!isQuest) return true;
 
 	if (auto quest = getQuest(desc)) {

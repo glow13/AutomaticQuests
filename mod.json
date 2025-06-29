@@ -1,5 +1,5 @@
 {
-	"geode": "4.6.1",
+	"geode": "4.6.2",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -22,5 +22,33 @@
 		"universal",
 		"enhancement",
 		"interface"
-	]
+	],
+	"settings": {
+        "functionality": {
+            "type": "title",
+            "name": "Functionality"
+        },
+		"disable-mod": {
+			"type": "bool",
+			"name": "Disable Mod",
+			"description": "Main toggle for the mod.",
+			"default": false
+		},
+		"visual": {
+            "type": "title",
+            "name": "Visual Effects"
+        },
+        "quest-preview": {
+			"type": "bool",
+			"name": "Disable Quest Preview",
+			"description": "Disables showing the preview for the next upcoming quest in the quest notification bar.",
+			"default": false
+		},
+		"quest-diamonds": {
+			"type": "bool",
+			"name": "Disable Quest Diamonds",
+			"description": "Disables the visual diamond collection in the \"New Best\" screen and \"Level Complete\" screen that show when you complete a quest.",
+			"default": false
+		}
+	}
 }
