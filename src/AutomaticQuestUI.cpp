@@ -115,6 +115,10 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 		mainLayer->addChild(newAchievementSprite);
 		m_fields->m_newAchievementSprite = newAchievementSprite;
 
+		// Calculate timings
+		const float fadeTime = 0.4;
+		const float delayTime = (s_showTime - 0.8) / 2;
+
 		// Setup fade out effects
 		m_titleLabel->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeOut::create(fadeTime)));
 		m_achievementSprite->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeOut::create(fadeTime)));
@@ -130,16 +134,33 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 
 void AchievementBarAQ::setOpacity(unsigned char alpha) {
 	AchievementBar::setOpacity(alpha);
-	if (m_fields->m_newTitleLabel) {
-		m_fields->m_newTitleLabel->setOpacity(alpha);
-		m_fields->m_newAchievementSprite->setOpacity(alpha);
-		m_fields->m_newAchievementDescription->setOpacity(alpha);
+	if (!m_fields->m_newTitleLabel) return;
 
-		m_titleLabel->setOpacity(0);
-		m_achievementSprite->setOpacity(0);
-		m_achievementDescription->setOpacity(0);
-	} // if
+	m_fields->m_newTitleLabel->setOpacity(alpha);
+	m_fields->m_newAchievementSprite->setOpacity(alpha);
+	m_fields->m_newAchievementDescription->setOpacity(alpha);
+
+	m_titleLabel->setOpacity(0);
+	m_achievementSprite->setOpacity(0);
+	m_achievementDescription->setOpacity(0);
 } // setOpacity
+
+// Extends the time the quest notification is displayed
+// Values taken from the andriod binary, thanks ghidra :)
+void AchievementBarAQ::show() {
+	AchievementBar::show();
+	if (!m_fields->m_newTitleLabel) return;
+
+	stopAllActions();
+	runAction(CCSequence::createWithTwoActions(CCDelayTime::create(s_showTime - 0.8), CCEaseIn::create(CCFadeOut::create(0.8), 2.0)));
+
+	m_layerColor->stopAllActions();
+	m_layerColor->runAction(CCEaseInOut::create(CCScaleTo::create(0.4, 1.0), 2.0));
+
+	auto notifier = AchievementNotifier::sharedState();
+	auto action = CCCallFunc::create(notifier, callfunc_selector(AchievementNotifier::achievementDisplayFinished));
+	m_layerColor->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(s_showTime), action));
+} // show
 
 GJChallengeItem* AchievementBarAQ::getQuest(char const * desc) {
 	int amount;
