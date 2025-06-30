@@ -29,11 +29,8 @@ void EndLevelLayerAQ::customSetup() {
 	EndLevelLayer::customSetup();
 	m_playLayer->m_diamonds = diamonds;
 
-	// Make sure the quest diamonds still show if no stars were earned
-	if (questDiamonds > 0 && m_starsPosition.isZero()) {
-		m_diamondsPosition = CCPoint(404.5, 160);
-		m_starsPosition = CCPoint(404.5, 160);
-	} // if
+	// Make sure the quest diamonds still show correctly even if no stars were earned
+	if (m_starsPosition.isZero()) m_starsPosition = m_diamondsPosition;
 } // customSetup
 
 // Excecutes after EndLevelLayerAQ::customSetup

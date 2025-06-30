@@ -8,8 +8,10 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	// Check if this completed any quests
 	for (int i = 1; i <= 3; i++) {
 		auto quest = getChallenge(i);
-		if (quest && m_fields->m_completed[i]) quest->m_count = 0;
-		else if (quest && quest->m_challengeType == type && quest->m_canClaim) {
+		if (quest && m_fields->m_completed[i]) {
+			quest->m_count = 0;
+			quest->m_canClaim = false;
+		} else if (quest && quest->m_challengeType == type && quest->m_canClaim) {
 			int reward = quest->m_reward.value();
 			m_fields->m_totalRewards += reward;
 			m_fields->m_completed[i] = true;
