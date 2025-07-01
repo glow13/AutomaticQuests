@@ -117,7 +117,7 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 
 		// Calculate timings
 		const float fadeTime = 0.4;
-		const float delayTime = (s_showTime - 0.8) / 2;
+		const float delayTime = (getQuestTime() - 0.8) / 2;
 
 		// Setup fade out effects
 		m_titleLabel->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeOut::create(fadeTime)));
@@ -151,15 +151,17 @@ void AchievementBarAQ::show() {
 	AchievementBar::show();
 	if (!m_fields->m_newTitleLabel) return;
 
+	float questTime = getQuestTime();
+
 	stopAllActions();
-	runAction(CCSequence::createWithTwoActions(CCDelayTime::create(s_showTime - 0.8), CCEaseIn::create(CCFadeOut::create(0.8), 2.0)));
+	runAction(CCSequence::createWithTwoActions(CCDelayTime::create(questTime - 0.8), CCEaseIn::create(CCFadeOut::create(0.8), 2.0)));
 
 	m_layerColor->stopAllActions();
 	m_layerColor->runAction(CCEaseInOut::create(CCScaleTo::create(0.4, 1.0), 2.0));
 
 	auto notifier = AchievementNotifier::sharedState();
 	auto action = CCCallFunc::create(notifier, callfunc_selector(AchievementNotifier::achievementDisplayFinished));
-	m_layerColor->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(s_showTime), action));
+	m_layerColor->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(questTime), action));
 } // show
 
 GJChallengeItem* AchievementBarAQ::getQuest(char const * desc) {

@@ -17,8 +17,6 @@ class $modify(AchievementBarAQ, AchievementBar) {
 		CCSprite* m_newAchievementSprite;
     };
 
-	inline const static float s_showTime = 4.0; // Vanilla is 3.2 seconds
-
 	bool init(char const * title, char const * desc, char const * icon, bool isQuest);
 	void setOpacity(unsigned char alpha);
 	void show();

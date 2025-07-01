@@ -18,6 +18,12 @@
 		"info": "You can report issues on the mod's Github page!",
 		"url": "https://github.com/glow13/AutomaticQuests/issues"
 	},
+	"dependencies": {
+		"cvolton.betterinfo": {
+			"version": ">=v4.3.10",
+			"importance": "suggested"
+		}
+	},
 	"tags": [
 		"universal",
 		"enhancement",
@@ -34,7 +40,7 @@
 			"description": "Main toggle for the mod.",
 			"default": false
 		},
-		"visual": {
+		"visual-effects": {
             "type": "title",
             "name": "Visual Effects"
         },
@@ -49,6 +55,18 @@
 			"name": "Disable Quest Diamonds",
 			"description": "Disables the visual diamond collection in the \"New Best\" screen and \"Level Complete\" screen that show when you complete a quest.",
 			"default": false
-		}
+		},
+		"quest-time": {
+            "type": "float",
+            "name": "Notification Time",
+            "description": "Controls how long the quest notification bar stays on screen, in seconds. This does not have an effect when the quest preview is disabled.\n\nThe default vanilla behavior is 3.2 seconds.\nThe default behavior for the mod is 4.0 seconds.",
+            "default": 4.0,
+			"min": 2.0,
+			"max": 6.0,
+			"control": {
+				"arrow-step": 0.1,
+				"slider-step": 0.1
+			}
+        }
 	}
 }

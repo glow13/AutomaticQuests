@@ -34,3 +34,7 @@ inline bool isModDisabled() {
 inline bool isFeatureDisabled(gd::string setting) {
 	return isModDisabled() || Mod::get()->getSettingValue<bool>(setting);
 } // isSettingEnabled
+
+inline float getQuestTime() {
+	return Mod::get()->getSettingValue<float>("quest-time");
+} // getQuestTime
