@@ -27,6 +27,7 @@ class $modify(AchievementBarAQ, AchievementBar) {
 
 class $modify(PlayLayerAQ, PlayLayer) {
 	void showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle);
+	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects);
 };
 
 class $modify(EndLevelLayerAQ, EndLevelLayer) {

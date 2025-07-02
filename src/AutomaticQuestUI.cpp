@@ -12,6 +12,16 @@ void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demon
 	PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
 } // showNewBest
 
+bool PlayLayerAQ::init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
+	if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
+
+	// Reset stats before starting a level to avoid any visual bugs
+	auto stats = GameStatsManagerAQ::sharedState();
+	stats->resetQuestRewards();
+
+	return true;
+} // init
+
 // Excecutes after GameStatsManagerAQ::incrementChallenge
 void EndLevelLayerAQ::customSetup() {
 	if (isFeatureDisabled("quest-diamonds")) {
@@ -180,7 +190,7 @@ GJChallengeItem* AchievementBarAQ::getQuest(char const * desc) {
 		} // if
 	} // for
 
-	log::error("Failed to find the specified quest!");
+	log::error("Failed to find the completed quest!");
 	return nullptr;
 } // getQuest
 

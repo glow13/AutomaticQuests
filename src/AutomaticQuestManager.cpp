@@ -2,7 +2,6 @@
 
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
-	if ((int)type == 1) resetQuestRewards();
 	if (isModDisabled()) return;
 
 	// Check if this completed any quests
@@ -22,8 +21,8 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 			auto object = CCString::createWithFormat("%i", reward);
 			m_challengeDiamonds->setObject(object, key);
 
+			log::info("Automatically claimed \"{}\" for {} diamonds", quest->m_name, quest->m_reward);
 			processChallengeQueue(i);
-			log::info("Automatically claimed quest #{}!", i);
 		} // if
 	} // for
 } // incrementChallenge
