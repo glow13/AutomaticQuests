@@ -2,6 +2,7 @@
 
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GameStatsManager.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 
 using namespace geode::prelude;
@@ -23,6 +24,11 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 	} // sharedState
 };
 
+class $modify(PlayLayerAQ, PlayLayer) {
+	void showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle);
+	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects);
+};
+
 class $modify(MenuLayerAQ, MenuLayer) {
     bool init();
 };
@@ -36,5 +42,5 @@ inline bool isFeatureDisabled(gd::string setting) {
 } // isSettingEnabled
 
 inline float getQuestTime() {
-	return Mod::get()->getSettingValue<float>("quest-time");
+	return Mod::get()->getSettingValue<double>("quest-time");
 } // getQuestTime

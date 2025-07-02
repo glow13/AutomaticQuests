@@ -27,7 +27,7 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	} // for
 } // incrementChallenge
 
-// Same implementation as GameStatsManager::getChallengeKey
+// Gives the same result as GameStatsManager::getChallengeKey
 gd::string GameStatsManagerAQ::getChallengeKey(GJChallengeItem* quest) {
 	return fmt::format("c{}{}", quest->m_position, quest->m_timeLeft);
 } // getChallengeKey
@@ -48,6 +48,16 @@ int GameStatsManagerAQ::getQuestRewardsAndReset() {
 	resetQuestRewards();
 	return rewardsNum;
 } // getQuestRewards
+
+bool PlayLayerAQ::init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
+	if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
+
+	// Reset stats before starting a level to avoid any visual bugs
+	auto stats = GameStatsManagerAQ::sharedState();
+	stats->resetQuestRewards();
+
+	return true;
+} // init
 
 // Kinda scuffed but it works so yeah
 bool MenuLayerAQ::init() {

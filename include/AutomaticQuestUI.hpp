@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Geode/Geode.hpp>
-#include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
 #include <Geode/modify/AchievementBar.hpp>
 
@@ -21,13 +20,8 @@ class $modify(AchievementBarAQ, AchievementBar) {
 	void setOpacity(unsigned char alpha);
 	void show();
 
-	GJChallengeItem* getQuest(char const * desc);
+	GJChallengeItem* getCompletedQuest(char const * desc);
 	bool parseQuestInfo(char const * desc, int * amount, GJChallengeType * type);
-};
-
-class $modify(PlayLayerAQ, PlayLayer) {
-	void showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle);
-	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects);
 };
 
 class $modify(EndLevelLayerAQ, EndLevelLayer) {
