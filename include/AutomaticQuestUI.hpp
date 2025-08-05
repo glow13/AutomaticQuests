@@ -20,8 +20,8 @@ class $modify(AchievementBarAQ, AchievementBar) {
 	void setOpacity(unsigned char alpha);
 	void show();
 
-	GJChallengeItem* getCompletedQuest(char const * desc);
-	bool parseQuestInfo(char const * desc, int * amount, GJChallengeType * type);
+	static GJChallengeItem* getCompletedQuest(char const * desc);
+	static bool parseQuestInfo(char const * desc, int * amount, GJChallengeType * type);
 };
 
 class $modify(EndLevelLayerAQ, EndLevelLayer) {

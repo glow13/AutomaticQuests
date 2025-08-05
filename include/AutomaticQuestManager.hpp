@@ -2,6 +2,7 @@
 
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GameStatsManager.hpp>
+#include <Geode/modify/AchievementNotifier.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 
@@ -27,6 +28,10 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 class $modify(PlayLayerAQ, PlayLayer) {
 	void showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle);
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects);
+};
+
+class $modify(AchievementNotifierAQ, AchievementNotifier) {
+	void notifyAchievement(char const* title, char const* desc, char const* icon, bool quest);
 };
 
 class $modify(MenuLayerAQ, MenuLayer) {

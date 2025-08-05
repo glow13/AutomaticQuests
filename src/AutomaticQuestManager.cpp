@@ -1,4 +1,5 @@
 #include "AutomaticQuestManager.hpp"
+#include "AutomaticQuestUI.hpp"
 
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
@@ -48,6 +49,23 @@ int GameStatsManagerAQ::getQuestRewardsAndReset() {
 	resetQuestRewards();
 	return rewardsNum;
 } // getQuestRewards
+
+void AchievementNotifierAQ::notifyAchievement(char const* title, char const* desc, char const* icon, bool isQuest) {
+	if (!isQuest) {
+		AchievementNotifier::notifyAchievement(title, desc, icon, isQuest);
+		return;
+	} // if
+
+	auto quest = AchievementBarAQ::getCompletedQuest(desc);
+	if (!quest) {
+		AchievementNotifier::notifyAchievement(title, desc, icon, isQuest);
+		return;
+	} // if
+
+	auto stats = GameStatsManagerAQ::sharedState();
+	bool completed = stats->m_fields->m_completed[quest->m_position];
+	if (!completed) AchievementNotifier::notifyAchievement(title, desc, icon, isQuest);
+} // notifyAchievement
 
 bool PlayLayerAQ::init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
 	if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
