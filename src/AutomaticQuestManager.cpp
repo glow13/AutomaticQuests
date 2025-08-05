@@ -1,5 +1,4 @@
 #include "AutomaticQuestManager.hpp"
-#include "AutomaticQuestUI.hpp"
 
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
@@ -51,20 +50,15 @@ int GameStatsManagerAQ::getQuestRewardsAndReset() {
 } // getQuestRewards
 
 void AchievementNotifierAQ::notifyAchievement(char const* title, char const* desc, char const* icon, bool isQuest) {
-	if (!isQuest) {
-		AchievementNotifier::notifyAchievement(title, desc, icon, isQuest);
-		return;
+	if (isQuest) {
+		auto stats = GameStatsManagerAQ::sharedState();
+		auto quest = stats->getCompletedQuest(desc);
+
+		// Make sure we haven't already claimed a quest at this position
+		if (quest && stats->m_fields->m_completed[quest->m_position]) return;
 	} // if
 
-	auto quest = AchievementBarAQ::getCompletedQuest(desc);
-	if (!quest) {
-		AchievementNotifier::notifyAchievement(title, desc, icon, isQuest);
-		return;
-	} // if
-
-	auto stats = GameStatsManagerAQ::sharedState();
-	bool completed = stats->m_fields->m_completed[quest->m_position];
-	if (!completed) AchievementNotifier::notifyAchievement(title, desc, icon, isQuest);
+	AchievementNotifier::notifyAchievement(title, desc, icon, isQuest);
 } // notifyAchievement
 
 bool PlayLayerAQ::init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
@@ -94,3 +88,38 @@ bool MenuLayerAQ::init() {
 
 	return true;
 } // init
+
+GJChallengeItem* GameStatsManagerAQ::getCompletedQuest(char const * desc) {
+	int amount;
+	GJChallengeType type;
+
+	if (!parseQuestInfo(desc, &amount, &type)) {
+		log::error("Failed to parse quest info!");
+		return nullptr;
+	} // if
+
+	for (int i = 1; i <= 3; i++) {
+		if (auto quest = getChallenge(i)) {
+			if ((int)quest->m_goal == amount && quest->m_challengeType == type) return quest;
+		} // if
+	} // for
+
+	log::error("Failed to find the completed quest!");
+	return nullptr;
+} // getCompletedQuest
+
+bool GameStatsManagerAQ::parseQuestInfo(char const * desc, int * amount, GJChallengeType * type) {
+	int amountInt;
+	std::string typeString;
+
+	std::stringstream ss(desc);
+	ss >> typeString >> amountInt >> typeString;
+
+	if (typeString == "Mana") *type = GJChallengeType::Orbs;
+	else if (typeString == "Silver") *type = GJChallengeType::UserCoins;
+	else if (typeString == "Stars/Moons.") *type = GJChallengeType::Stars;
+	else *type = GJChallengeType::Unknown;
+
+	*amount = amountInt;
+	return *type != GJChallengeType::Unknown;
+} // parseQuestInfo

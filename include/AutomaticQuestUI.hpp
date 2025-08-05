@@ -19,9 +19,6 @@ class $modify(AchievementBarAQ, AchievementBar) {
 	bool init(char const * title, char const * desc, char const * icon, bool isQuest);
 	void setOpacity(unsigned char alpha);
 	void show();
-
-	static GJChallengeItem* getCompletedQuest(char const * desc);
-	static bool parseQuestInfo(char const * desc, int * amount, GJChallengeType * type);
 };
 
 class $modify(EndLevelLayerAQ, EndLevelLayer) {

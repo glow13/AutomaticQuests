@@ -19,6 +19,9 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 	int getQuestRewardsAndReset();
 	void resetQuestRewards();
 
+	GJChallengeItem* getCompletedQuest(char const * desc);
+	bool parseQuestInfo(char const * desc, int * amount, GJChallengeType * type);
+
 	static inline GameStatsManagerAQ* sharedState() {
 		auto stats = GameStatsManager::sharedState();
 		return static_cast<GameStatsManagerAQ*>(stats);

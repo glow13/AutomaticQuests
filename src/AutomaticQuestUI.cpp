@@ -48,11 +48,11 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 	if (!isQuest) return true;
 
 	// Get the quest that was just completed
-	auto quest = getCompletedQuest(desc);
+	auto stats = GameStatsManagerAQ::sharedState();
+	auto quest = stats->getCompletedQuest(desc);
 	if (!quest) return true;
 
 	// Initialize variables
-	auto stats = GameStatsManager::sharedState();
 	std::string iconString = "GJ_timeIcon_001.png";
 	std::string newDesc = "New quest in ";
 
@@ -171,39 +171,3 @@ void AchievementBarAQ::show() {
 	auto action = CCCallFunc::create(notifier, callfunc_selector(AchievementNotifier::achievementDisplayFinished));
 	m_layerColor->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(questTime), action));
 } // show
-
-GJChallengeItem* AchievementBarAQ::getCompletedQuest(char const * desc) {
-	int amount;
-	GJChallengeType type;
-
-	if (!parseQuestInfo(desc, &amount, &type)) {
-		log::error("Failed to parse quest info!");
-		return nullptr;
-	} // if
-
-	auto stats = GameStatsManager::sharedState();
-	for (int i = 1; i <= 3; i++) {
-		if (auto quest = stats->getChallenge(i)) {
-			if ((int)quest->m_goal == amount && quest->m_challengeType == type) return quest;
-		} // if
-	} // for
-
-	log::error("Failed to find the completed quest!");
-	return nullptr;
-} // getQuest
-
-bool AchievementBarAQ::parseQuestInfo(char const * desc, int * amount, GJChallengeType * type) {
-	int amountInt;
-	std::string typeString;
-
-	std::stringstream ss(desc);
-	ss >> typeString >> amountInt >> typeString;
-
-	if (typeString == "Mana") *type = GJChallengeType::Orbs;
-	else if (typeString == "Silver") *type = GJChallengeType::UserCoins;
-	else if (typeString == "Stars/Moons.") *type = GJChallengeType::Stars;
-	else *type = GJChallengeType::Unknown;
-
-	*amount = amountInt;
-	return *type != GJChallengeType::Unknown;
-} // parseQuestInfo
