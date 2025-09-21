@@ -75,10 +75,8 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 		} // switch
 	} else {
 		auto currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-		int hours = (stats->m_challengeTime - currentTime) / 3600;
-		int minutes = (stats->m_challengeTime - currentTime) / 60 - hours * 60;
-		if (hours >= 0) newDesc += fmt::format("{}h {}min.", hours, minutes);
-		else newDesc += "?h ??min.";
+		auto timeLeft = (currentTime < stats->m_challengeTime) ? stats->m_challengeTime - currentTime : 0;
+		newDesc += GameToolbox::getTimeString(timeLeft, true) + ".";
 	} // if
 
 	// Save references
