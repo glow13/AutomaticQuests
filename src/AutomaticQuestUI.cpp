@@ -76,7 +76,7 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 	} else {
 		auto currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		auto timeLeft = (currentTime < stats->m_challengeTime) ? stats->m_challengeTime - currentTime : 0;
-		newDesc += GameToolbox::getTimeString(timeLeft, true) + ".";
+		newDesc += (std::string)GameToolbox::getTimeString(timeLeft, true) + ".";
 	} // if
 
 	// Save references

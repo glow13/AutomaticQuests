@@ -8,7 +8,7 @@ Well, to anyone who wants to complete your quests as efficiently as possible, th
 
 ## How it Works
 
-This is a simple mod that automatically claims your quests when you complete them! Upon completing a quest, the rewarded diamonds will be automatically added to your profile, and the quest notification will display your next upcoming quest. 
+This is a simple mod for Geometry Dash that automatically claims your quests when you complete them! Upon completing a quest, the rewarded diamonds will be automatically added to your profile, and the quest notification will display your next upcoming quest. 
 
 You can then immediately make progress on the next quest without having to go back to the quest menu and claim it! No extra setup required! So efficient!!!
 
