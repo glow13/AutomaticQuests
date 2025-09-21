@@ -15,7 +15,6 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 	};
 
 	void incrementChallenge(GJChallengeType type, int amount);
-	gd::string getChallengeKey(GJChallengeItem* quest);
 	int getQuestRewardsAndReset();
 	void resetQuestRewards();
 

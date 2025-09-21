@@ -27,17 +27,15 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	} // for
 } // incrementChallenge
 
-// Gives the same result as GameStatsManager::getChallengeKey
-gd::string GameStatsManagerAQ::getChallengeKey(GJChallengeItem* quest) {
-	return fmt::format("c{}{}", quest->m_position, quest->m_timeLeft);
-} // getChallengeKey
-
 void GameStatsManagerAQ::resetQuestRewards() {
 	m_fields->m_totalRewards = 0;
 
 	m_fields->m_completed[1] = false;
 	m_fields->m_completed[2] = false;
 	m_fields->m_completed[3] = false;
+
+	if (areChallengesLoaded()) return;
+	GameLevelManager::sharedState()->getGJChallenges();
 } // resetQuestRewards
 
 // Resets the rewards to zero after use
@@ -71,20 +69,17 @@ bool PlayLayerAQ::init(GJGameLevel* level, bool useReplay, bool dontCreateObject
 	return true;
 } // init
 
-// Kinda scuffed but it works so yeah
 bool MenuLayerAQ::init() {
 	if (!MenuLayer::init()) return false;
 	if (isModDisabled()) return true;
 
 	// Check if quests are already loaded
 	auto stats = GameStatsManager::sharedState();
-	if (stats->m_challengeTime > 0) return true;
+	if (stats->areChallengesLoaded()) return true;
 
 	// Load quests if not already loaded
 	log::info("Loading active quests...");
-	auto questLayer = ChallengesPage::create();
-	questLayer->onClose(nullptr);
-	questLayer->release();
+	GameLevelManager::sharedState()->getGJChallenges();
 
 	return true;
 } // init
