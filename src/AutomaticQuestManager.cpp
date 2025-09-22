@@ -34,7 +34,10 @@ void GameStatsManagerAQ::resetQuestRewards() {
 	m_fields->m_completed[2] = false;
 	m_fields->m_completed[3] = false;
 
-	if (areChallengesLoaded()) return;
+	auto currentTime = std::chrono::system_clock::now();
+	if (std::chrono::system_clock::to_time_t(currentTime) < m_challengeTime) return;
+
+	resetChallengeTimer();
 	GameLevelManager::sharedState()->getGJChallenges();
 } // resetQuestRewards
 
