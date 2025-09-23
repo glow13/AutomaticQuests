@@ -2,7 +2,7 @@
 
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
-	if (isModDisabled()) return;
+	if (isFeatureDisabled("auto-claim")) return;
 
 	// Check if this completed any quests
 	for (int i = 1; i <= 3; i++) {

@@ -2,7 +2,7 @@
 
 // Excecutes after GameStatsManagerAQ::incrementChallenge
 void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
-	if (isFeatureDisabled("quest-diamonds")) {
+	if (isFeatureDisabled("quest-diamonds") || isFeatureDisabled("auto-claim")) {
 		PlayLayer::showNewBest(newReward, orbs, diamonds, demonKey, noRetry, noTitle);
 		return;
 	} // if
@@ -14,7 +14,7 @@ void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demon
 
 // Excecutes after GameStatsManagerAQ::incrementChallenge
 void EndLevelLayerAQ::customSetup() {
-	if (isFeatureDisabled("quest-diamonds")) {
+	if (isFeatureDisabled("quest-diamonds") || isFeatureDisabled("auto-claim")) {
 		EndLevelLayer::customSetup();
 		return;
 	} // if

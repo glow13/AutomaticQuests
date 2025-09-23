@@ -37,7 +37,13 @@
 		"disable-mod": {
 			"type": "bool",
 			"name": "Disable Mod",
-			"description": "Main toggle for the mod.",
+			"description": "Main toggle for the mod. Disables all functionality and visual effects.",
+			"default": false
+		},
+		"auto-claim": {
+			"type": "bool",
+			"name": "Disable Auto Claim",
+			"description": "Disables the quests from automatically being claimed when you complete them. This is useful when you want to disable the main mod functionality while still keeping the visual effects in the quest bar.\n\nAlso disables the diamond collection effect when completing a quest.",
 			"default": false
 		},
 		"visual-effects": {
@@ -47,13 +53,13 @@
         "quest-preview": {
 			"type": "bool",
 			"name": "Disable Quest Preview",
-			"description": "Disables showing the preview for the next upcoming quest in the quest notification bar.",
+			"description": "Disables showing the \"New Quest\" preview for the next upcoming quest in the quest notification bar.",
 			"default": false
 		},
 		"quest-diamonds": {
 			"type": "bool",
-			"name": "Disable Quest Diamonds",
-			"description": "Disables the visual diamond collection in the \"New Best\" screen and \"Level Complete\" screen that show when you complete a quest.",
+			"name": "Disable Diamond Effect",
+			"description": "Disables the diamond collection effect in the \"New Best\" screen and \"Level Complete\" screen that plays when you complete a quest.\n\nDoesn't affect actual quest rewards, the rewarded diamonds will still be added to your profile.",
 			"default": false
 		},
 		"quest-time": {
