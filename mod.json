@@ -8,7 +8,7 @@
 	},
 	"id": "glow12.automaticquests",
 	"name": "Automatic Quests",
-	"version": "v1.0.2",
+	"version": "v1.0.3",
 	"developer": "glow12",
 	"description": "Never forget to claim a quest again!",
 	"links": {
@@ -30,10 +30,10 @@
 		"interface"
 	],
 	"settings": {
-        "functionality": {
-            "type": "title",
-            "name": "Functionality"
-        },
+		"functionality": {
+			"type": "title",
+			"name": "Functionality"
+		},
 		"disable-mod": {
 			"type": "bool",
 			"name": "Disable Mod",
@@ -47,14 +47,8 @@
 			"default": false
 		},
 		"visual-effects": {
-            "type": "title",
-            "name": "Visual Effects"
-        },
-        "quest-preview": {
-			"type": "bool",
-			"name": "Disable Quest Preview",
-			"description": "Disables showing the \"New Quest\" preview for the next upcoming quest in the quest notification bar.",
-			"default": false
+			"type": "title",
+			"name": "Visual Effects"
 		},
 		"quest-diamonds": {
 			"type": "bool",
@@ -62,17 +56,24 @@
 			"description": "Disables the diamond collection effect in the \"New Best\" screen and \"Level Complete\" screen that plays when you complete a quest.\n\nDoesn't affect actual quest rewards, the rewarded diamonds will still be added to your profile.",
 			"default": false
 		},
+		"quest-preview": {
+			"type": "bool",
+			"name": "Disable Quest Preview",
+			"description": "Disables showing the \"New Quest\" preview for the next upcoming quest in the quest notification bar.",
+			"default": false
+		},
 		"quest-time": {
-            "type": "float",
-            "name": "Notification Time",
-            "description": "Controls how long the quest notification bar stays on screen, in seconds. This does not have an effect when the quest preview is disabled.\n\nThe default vanilla behavior is 3.2 seconds.\nThe default behavior for the mod is 4.0 seconds.",
-            "default": 4.0,
+			"type": "float",
+			"name": "Notification Time",
+			"description": "Controls how long the quest notification bar stays on screen, in seconds. This does not have an effect when the quest preview is disabled.\n\nThe default vanilla behavior is 3.2 seconds.\nThe default behavior for the mod is 4.0 seconds.",
+			"enable-if": "!quest-preview",
+			"default": 4.0,
 			"min": 2.0,
 			"max": 6.0,
 			"control": {
 				"arrow-step": 0.1,
 				"slider-step": 0.1
 			}
-        }
+		}
 	}
 }
