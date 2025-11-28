@@ -34,11 +34,7 @@ void GameStatsManagerAQ::resetQuestRewards() {
 	m_fields->m_completed[2] = false;
 	m_fields->m_completed[3] = false;
 
-	auto currentTime = std::chrono::system_clock::now();
-	if (std::chrono::system_clock::to_time_t(currentTime) < m_challengeTime) return;
-
-	resetChallengeTimer();
-	GameLevelManager::sharedState()->getGJChallenges();
+	loadChallenges();
 } // resetQuestRewards
 
 // Resets the rewards to zero after use
@@ -48,7 +44,32 @@ int GameStatsManagerAQ::getQuestRewardsAndReset() {
 	int rewardsNum = m_fields->m_totalRewards;
 	resetQuestRewards();
 	return rewardsNum;
-} // getQuestRewards
+} // getQuestRewardsAndReset
+
+void GameStatsManagerAQ::tryGetChallenges() {
+	if (areChallengesLoaded() || m_fields->loadAttempts >= 10) {
+		getScheduler()->unscheduleAllForTarget(this);
+		pauseSchedulerAndActions();
+
+		if (m_fields->loadAttempts >= 10) log::error("Failed to load quests!");
+		else log::debug("Successfully loaded quests");
+
+		m_fields->loadAttempts = 0;
+		return;
+	} // if
+
+	m_fields->loadAttempts++;
+	GameLevelManager::sharedState()->getGJChallenges();
+} // tryGetChallenges
+
+void GameStatsManagerAQ::loadChallenges() {
+	if (m_fields->loadAttempts > 0) return;
+	auto currentTime = std::chrono::system_clock::now();
+	if (std::chrono::system_clock::to_time_t(currentTime) > m_challengeTime) resetChallengeTimer();
+
+	schedule(schedule_selector(GameStatsManagerAQ::tryGetChallenges), 2);
+	resumeSchedulerAndActions();
+} // loadChallenges
 
 void AchievementNotifierAQ::notifyAchievement(char const* title, char const* desc, char const* icon, bool isQuest) {
 	if (isQuest) {
@@ -77,12 +98,13 @@ bool MenuLayerAQ::init() {
 	if (isModDisabled()) return true;
 
 	// Check if quests are already loaded
-	auto stats = GameStatsManager::sharedState();
+	auto stats = GameStatsManagerAQ::sharedState();
 	if (stats->areChallengesLoaded()) return true;
+	else if (stats->m_fields->loadAttempts > 0) return true;
 
 	// Load quests if not already loaded
 	log::info("Loading active quests...");
-	GameLevelManager::sharedState()->getGJChallenges();
+	stats->loadChallenges();
 
 	return true;
 } // init
