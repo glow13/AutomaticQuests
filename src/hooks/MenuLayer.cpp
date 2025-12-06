@@ -3,6 +3,8 @@
 #include <Geode/modify/MenuLayer.hpp>
 
 class $modify(MenuLayer) {
+
+    // Check for potential new quests when starting the game
     bool init() {
         if (!MenuLayer::init()) return false;
         if (AutomaticQuests::isModDisabled()) return true;

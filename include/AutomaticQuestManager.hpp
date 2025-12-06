@@ -6,6 +6,7 @@
 using namespace geode::prelude;
 
 class $modify(GameStatsManagerAQ, GameStatsManager) {
+
 	struct Fields : public GJChallengeDelegate {
 		GameStatsManagerAQ* stats;
 
@@ -25,12 +26,14 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 	GJChallengeItem* getCompletedQuest(char const * desc);
 	bool parseQuestInfo(char const * desc, int * amount, GJChallengeType * type);
 
+	// Automatically casts to the custom manager class
 	static inline GameStatsManagerAQ* sharedState() {
 		auto stats = GameStatsManager::sharedState();
 		return static_cast<GameStatsManagerAQ*>(stats);
 	} // sharedState
 };
 
+// Mod utility functions, primarily for mod settings
 namespace AutomaticQuests {
 	inline bool isModDisabled() {
 		return Mod::get()->getSettingValue<bool>("disable-mod");

@@ -1,6 +1,7 @@
 #include "AutomaticQuestManager.hpp"
 #include "AutomaticQuestNotification.hpp"
 
+// Custom quest notification setup, it shows the next upcoming quest or the time until the new quests
 bool AchievementBarAQ::init(char const * title, char const * desc, char const * icon, bool isQuest) {
 
 	if (!AchievementBar::init(title, desc, icon, isQuest)) return false;
@@ -100,6 +101,7 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 	return true;
 } // init
 
+// Handle fade effects correctly when adding custom elements to the notification
 void AchievementBarAQ::setOpacity(unsigned char alpha) {
 	AchievementBar::setOpacity(alpha);
 
