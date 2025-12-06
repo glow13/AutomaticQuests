@@ -8,12 +8,12 @@ class $modify(MenuLayer) {
         if (AutomaticQuests::isModDisabled()) return true;
 
         // Check if quests are already loaded
-        auto stats = GameStatsManager::sharedState();
+        auto stats = GameStatsManagerAQ::sharedState();
         if (stats->areChallengesLoaded()) return true;
 
         // Load quests if not already loaded
         log::info("Loading active quests...");
-        GameLevelManager::sharedState()->getGJChallenges();
+        stats->tryGetChallenges();
 
         return true;
     } // init

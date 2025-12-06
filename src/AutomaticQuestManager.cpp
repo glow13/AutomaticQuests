@@ -34,11 +34,7 @@ void GameStatsManagerAQ::resetQuestRewards() {
 	m_fields->m_completed[2] = false;
 	m_fields->m_completed[3] = false;
 
-	auto currentTime = std::chrono::system_clock::now();
-	if (std::chrono::system_clock::to_time_t(currentTime) < m_challengeTime) return;
-
-	resetChallengeTimer();
-	GameLevelManager::sharedState()->getGJChallenges();
+	tryGetChallenges();
 } // resetQuestRewards
 
 // Resets the rewards to zero after use
@@ -84,3 +80,21 @@ bool GameStatsManagerAQ::parseQuestInfo(char const * desc, int * amount, GJChall
 	*amount = amountInt;
 	return *type != GJChallengeType::Unknown;
 } // parseQuestInfo
+
+void GameStatsManagerAQ::tryGetChallenges() {
+	auto currentTime = std::chrono::system_clock::now();
+	if (std::chrono::system_clock::to_time_t(currentTime) > m_challengeTime) resetChallengeTimer();
+	if (areChallengesLoaded()) return;
+
+	auto manager = GameLevelManager::sharedState();
+	manager->m_GJChallengeDelegate = m_fields.self();
+	manager->getGJChallenges();
+} // tryGetChallenges
+
+void GameStatsManagerAQ::Fields::challengeStatusFinished() {
+	log::info("challenge status finished");
+} // challengeStatusFinished
+
+void GameStatsManagerAQ::Fields::challengeStatusFailed() {
+	log::info("challenge status failed");
+} // challengeStatusFailed

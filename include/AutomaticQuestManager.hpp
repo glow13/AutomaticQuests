@@ -6,12 +6,16 @@
 using namespace geode::prelude;
 
 class $modify(GameStatsManagerAQ, GameStatsManager) {
-	struct Fields {
+	struct Fields : public GJChallengeDelegate {
 		int m_totalRewards = 0;
 		bool m_completed[4] = {false, false, false, false};
+
+		void challengeStatusFinished() override;
+		void challengeStatusFailed() override;
 	};
 
 	void incrementChallenge(GJChallengeType type, int amount);
+	void tryGetChallenges();
 	int getQuestRewardsAndReset();
 	void resetQuestRewards();
 
