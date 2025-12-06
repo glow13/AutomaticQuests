@@ -7,6 +7,8 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 	if (AutomaticQuests::isFeatureDisabled("quest-preview")) return true;
 	if (!isQuest) return true;
 
+	auto fields = m_fields.self();
+
 	// Get the quest that was just completed
 	auto stats = GameStatsManagerAQ::sharedState();
 	auto quest = stats->getCompletedQuest(desc);
@@ -51,7 +53,7 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 	newTitleLabel->setAnchorPoint(m_titleLabel->getAnchorPoint());
 	newTitleLabel->setOpacity(0);
 	textNode->addChild(newTitleLabel);
-	m_fields->m_newTitleLabel = newTitleLabel;
+	fields->m_newTitleLabel = newTitleLabel;
 
 	// Create the new quest description
 	auto newAchievementDescription = TextArea::create(
@@ -69,7 +71,7 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 	newAchievementDescription->setAnchorPoint(m_achievementDescription->getAnchorPoint());
 	newAchievementDescription->setOpacity(0);
 	textNode->addChild(newAchievementDescription);
-	m_fields->m_newAchievementDescription = newAchievementDescription;
+	fields->m_newAchievementDescription = newAchievementDescription;
 
 	// Create the new quest sprite
 	auto newAchievementSprite = CCSprite::createWithSpriteFrameName(iconString.c_str());
@@ -79,7 +81,7 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 	newAchievementSprite->setZOrder(m_achievementSprite->getZOrder());
 	newAchievementSprite->setOpacity(0);
 	mainLayer->addChild(newAchievementSprite);
-	m_fields->m_newAchievementSprite = newAchievementSprite;
+	fields->m_newAchievementSprite = newAchievementSprite;
 
 	// Calculate timings
 	const float fadeTime = 0.4;
@@ -100,11 +102,13 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 
 void AchievementBarAQ::setOpacity(unsigned char alpha) {
 	AchievementBar::setOpacity(alpha);
-	if (!m_fields->m_newTitleLabel) return;
 
-	m_fields->m_newTitleLabel->setOpacity(alpha);
-	m_fields->m_newAchievementSprite->setOpacity(alpha);
-	m_fields->m_newAchievementDescription->setOpacity(alpha);
+	auto fields = m_fields.self();
+	if (!fields->m_newTitleLabel) return;
+
+	fields->m_newTitleLabel->setOpacity(alpha);
+	fields->m_newAchievementSprite->setOpacity(alpha);
+	fields->m_newAchievementDescription->setOpacity(alpha);
 
 	m_titleLabel->setOpacity(0);
 	m_achievementSprite->setOpacity(0);

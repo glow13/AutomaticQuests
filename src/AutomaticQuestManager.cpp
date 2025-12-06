@@ -4,16 +4,18 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
 	if (AutomaticQuests::isFeatureDisabled("auto-claim")) return;
 
+	auto fields = m_fields.self();
+
 	// Check if this completed any quests
 	for (int i = 1; i <= 3; i++) {
 		auto quest = getChallenge(i);
-		if (quest && m_fields->m_completed[i]) {
+		if (quest && fields->m_completed[i]) {
 			quest->m_count = 0;
 			quest->m_canClaim = false;
 		} else if (quest && quest->m_challengeType == type && quest->m_canClaim) {
 			int reward = quest->m_reward.value();
-			m_fields->m_totalRewards += reward;
-			m_fields->m_completed[i] = true;
+			fields->m_totalRewards += reward;
+			fields->m_completed[i] = true;
 			incrementStat("13", reward);
 
 			// Add challenge diamonds
@@ -28,22 +30,22 @@ void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 } // incrementChallenge
 
 void GameStatsManagerAQ::resetQuestRewards() {
-	m_fields->m_totalRewards = 0;
+	auto fields = m_fields.self();
+	fields->m_totalRewards = 0;
 
-	m_fields->m_completed[1] = false;
-	m_fields->m_completed[2] = false;
-	m_fields->m_completed[3] = false;
+	fields->m_completed[1] = false;
+	fields->m_completed[2] = false;
+	fields->m_completed[3] = false;
 
 	tryGetChallenges();
 } // resetQuestRewards
 
 // Resets the rewards to zero after use
 int GameStatsManagerAQ::getQuestRewardsAndReset() {
-	if (m_fields->m_totalRewards < 1) return 0;
-
-	int rewardsNum = m_fields->m_totalRewards;
-	resetQuestRewards();
-	return rewardsNum;
+	if (int rewards = m_fields->m_totalRewards; rewards > 0) {
+		resetQuestRewards();
+		return rewards;
+	} else return 0;
 } // getQuestRewards
 
 GJChallengeItem* GameStatsManagerAQ::getCompletedQuest(char const * desc) {
@@ -55,10 +57,8 @@ GJChallengeItem* GameStatsManagerAQ::getCompletedQuest(char const * desc) {
 		return nullptr;
 	} // if
 
-	for (int i = 1; i <= 3; i++) {
-		if (auto quest = getChallenge(i)) {
-			if ((int)quest->m_goal == amount && quest->m_challengeType == type) return quest;
-		} // if
+	for (auto [key, quest] : CCDictionaryExt<std::string, GJChallengeItem*>(m_activeChallenges)) {
+		if ((int)quest->m_goal == amount && quest->m_challengeType == type) return quest;
 	} // for
 
 	log::error("Failed to find the completed quest!");
