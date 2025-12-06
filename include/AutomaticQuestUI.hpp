@@ -1,10 +1,7 @@
 #pragma once
 
 #include <Geode/Geode.hpp>
-#include <Geode/modify/EndLevelLayer.hpp>
 #include <Geode/modify/AchievementBar.hpp>
-
-#include "AutomaticQuestManager.hpp"
 
 using namespace geode::prelude;
 
@@ -19,9 +16,4 @@ class $modify(AchievementBarAQ, AchievementBar) {
 	bool init(char const * title, char const * desc, char const * icon, bool isQuest);
 	void setOpacity(unsigned char alpha);
 	void show();
-};
-
-class $modify(EndLevelLayerAQ, EndLevelLayer) {
-	void playDiamondEffect(float time);
-	void customSetup();
 };

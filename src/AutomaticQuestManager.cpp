@@ -2,7 +2,7 @@
 
 void GameStatsManagerAQ::incrementChallenge(GJChallengeType type, int amount) {
 	GameStatsManager::incrementChallenge(type, amount);
-	if (isFeatureDisabled("auto-claim")) return;
+	if (AutomaticQuests::isFeatureDisabled("auto-claim")) return;
 
 	// Check if this completed any quests
 	for (int i = 1; i <= 3; i++) {
@@ -49,43 +49,6 @@ int GameStatsManagerAQ::getQuestRewardsAndReset() {
 	resetQuestRewards();
 	return rewardsNum;
 } // getQuestRewards
-
-void AchievementNotifierAQ::notifyAchievement(char const* title, char const* desc, char const* icon, bool isQuest) {
-	if (isQuest) {
-		auto stats = GameStatsManagerAQ::sharedState();
-		auto quest = stats->getCompletedQuest(desc);
-
-		// Make sure we haven't already claimed a quest at this position
-		if (quest && stats->m_fields->m_completed[quest->m_position]) return;
-	} // if
-
-	AchievementNotifier::notifyAchievement(title, desc, icon, isQuest);
-} // notifyAchievement
-
-bool PlayLayerAQ::init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
-	if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
-
-	// Reset stats before starting a level to avoid any visual bugs
-	auto stats = GameStatsManagerAQ::sharedState();
-	stats->resetQuestRewards();
-
-	return true;
-} // init
-
-bool MenuLayerAQ::init() {
-	if (!MenuLayer::init()) return false;
-	if (isModDisabled()) return true;
-
-	// Check if quests are already loaded
-	auto stats = GameStatsManager::sharedState();
-	if (stats->areChallengesLoaded()) return true;
-
-	// Load quests if not already loaded
-	log::info("Loading active quests...");
-	GameLevelManager::sharedState()->getGJChallenges();
-
-	return true;
-} // init
 
 GJChallengeItem* GameStatsManagerAQ::getCompletedQuest(char const * desc) {
 	int amount;

@@ -1,50 +1,10 @@
+#include "AutomaticQuestManager.hpp"
 #include "AutomaticQuestUI.hpp"
-
-// Excecutes after GameStatsManagerAQ::incrementChallenge
-void PlayLayerAQ::showNewBest(bool newReward, int orbs, int diamonds, bool demonKey, bool noRetry, bool noTitle) {
-	if (isFeatureDisabled("quest-diamonds") || isFeatureDisabled("auto-claim")) {
-		PlayLayer::showNewBest(newReward, orbs, diamonds, demonKey, noRetry, noTitle);
-		return;
-	} // if
-
-	auto stats = GameStatsManagerAQ::sharedState();
-	int newDiamonds = diamonds + stats->getQuestRewardsAndReset();
-	PlayLayer::showNewBest(newReward, orbs, newDiamonds, demonKey, noRetry, noTitle);
-} // showNewBest
-
-// Excecutes after GameStatsManagerAQ::incrementChallenge
-void EndLevelLayerAQ::customSetup() {
-	if (isFeatureDisabled("quest-diamonds") || isFeatureDisabled("auto-claim")) {
-		EndLevelLayer::customSetup();
-		return;
-	} // if
-
-	// See if any diamonds were earned from quests
-	auto stats = GameStatsManagerAQ::sharedState();
-	int questDiamonds = stats->getQuestRewardsAndReset();
-
-	// Trick the EndLevelLayer to display the quest diamonds
-	int diamonds = m_playLayer->m_diamonds;
-	m_playLayer->m_diamonds += questDiamonds;
-	EndLevelLayer::customSetup();
-	m_playLayer->m_diamonds = diamonds;
-
-	// Make sure the quest diamonds still show correctly even if no stars were earned
-	if (m_starsPosition.isZero()) m_starsPosition = m_diamondsPosition;
-} // customSetup
-
-// Excecutes after EndLevelLayerAQ::customSetup
-void EndLevelLayerAQ::playDiamondEffect(float time) {
-	int diamonds = m_playLayer->m_diamonds;
-	m_playLayer->m_diamonds = m_diamonds;
-	EndLevelLayer::playDiamondEffect(time);
-	m_playLayer->m_diamonds = diamonds;
-} // playDiamondEffect
 
 bool AchievementBarAQ::init(char const * title, char const * desc, char const * icon, bool isQuest) {
 
 	if (!AchievementBar::init(title, desc, icon, isQuest)) return false;
-	if (isFeatureDisabled("quest-preview")) return true;
+	if (AutomaticQuests::isFeatureDisabled("quest-preview")) return true;
 	if (!isQuest) return true;
 
 	// Get the quest that was just completed
@@ -123,7 +83,7 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 
 	// Calculate timings
 	const float fadeTime = 0.4;
-	const float delayTime = (getQuestTime() - 0.8) / 2;
+	const float delayTime = (AutomaticQuests::getQuestTime() - 0.8) / 2;
 
 	// Setup fade out effects
 	m_titleLabel->runAction(CCSequence::createWithTwoActions(CCDelayTime::create(delayTime), CCFadeOut::create(fadeTime)));
@@ -157,7 +117,7 @@ void AchievementBarAQ::show() {
 	AchievementBar::show();
 	if (!m_fields->m_newTitleLabel) return;
 
-	float questTime = getQuestTime();
+	float questTime = AutomaticQuests::getQuestTime();
 
 	stopAllActions();
 	runAction(CCSequence::createWithTwoActions(CCDelayTime::create(questTime - 0.8), CCEaseIn::create(CCFadeOut::create(0.8), 2.0)));
