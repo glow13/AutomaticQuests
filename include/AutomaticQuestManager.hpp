@@ -7,6 +7,8 @@ using namespace geode::prelude;
 
 class $modify(GameStatsManagerAQ, GameStatsManager) {
 	struct Fields : public GJChallengeDelegate {
+		GameStatsManagerAQ* stats;
+
 		int m_totalRewards = 0;
 		bool m_completed[4] = {false, false, false, false};
 

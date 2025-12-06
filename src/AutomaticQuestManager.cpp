@@ -86,8 +86,11 @@ void GameStatsManagerAQ::tryGetChallenges() {
 	if (std::chrono::system_clock::to_time_t(currentTime) > m_challengeTime) resetChallengeTimer();
 	if (areChallengesLoaded()) return;
 
+	auto fields = m_fields.self();
+	fields->stats = this;
+
 	auto manager = GameLevelManager::sharedState();
-	manager->m_GJChallengeDelegate = m_fields.self();
+	manager->m_GJChallengeDelegate = fields;
 	manager->getGJChallenges();
 } // tryGetChallenges
 
@@ -96,5 +99,13 @@ void GameStatsManagerAQ::Fields::challengeStatusFinished() {
 } // challengeStatusFinished
 
 void GameStatsManagerAQ::Fields::challengeStatusFailed() {
-	log::info("challenge status failed");
+	if (stats->areChallengesLoaded() || stats->getActionByTag(5)) return;
+	log::error("challenge status failed");
+
+	auto func = callfunc_selector(GameStatsManagerAQ::tryGetChallenges);
+	auto action = CCSequence::create(CCDelayTime::create(5), CCCallFunc::create(stats, func), 0);
+	action->setTag(5);
+
+	auto actions = stats->getActionManager();
+	actions->addAction(action, stats, false);
 } // challengeStatusFailed
