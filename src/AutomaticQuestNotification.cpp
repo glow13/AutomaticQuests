@@ -1,5 +1,5 @@
 #include "AutomaticQuestManager.hpp"
-#include "AutomaticQuestUI.hpp"
+#include "AutomaticQuestNotification.hpp"
 
 bool AchievementBarAQ::init(char const * title, char const * desc, char const * icon, bool isQuest) {
 
