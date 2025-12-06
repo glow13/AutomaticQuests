@@ -8,7 +8,7 @@
 	},
 	"id": "glow12.automaticquests",
 	"name": "Automatic Quests",
-	"version": "v1.0.3",
+	"version": "v1.1.0",
 	"developer": "glow12",
 	"description": "Never forget to claim a quest again!",
 	"links": {
@@ -17,12 +17,6 @@
 	"issues": {
 		"info": "You can report issues on the mod's Github page!",
 		"url": "https://github.com/glow13/AutomaticQuests/issues"
-	},
-	"dependencies": {
-		"cvolton.betterinfo": {
-			"version": ">=v4.3.10",
-			"importance": "suggested"
-		}
 	},
 	"tags": [
 		"universal",
