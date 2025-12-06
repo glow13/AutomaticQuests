@@ -10,7 +10,6 @@ using namespace geode::prelude;
 
 class $modify(GameStatsManagerAQ, GameStatsManager) {
 	struct Fields {
-		int loadAttempts = 0;
 		int m_totalRewards = 0;
 		bool m_completed[4] = {false, false, false, false};
 	};
@@ -18,8 +17,6 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 	void incrementChallenge(GJChallengeType type, int amount);
 	int getQuestRewardsAndReset();
 	void resetQuestRewards();
-	void tryGetChallenges();
-	void loadChallenges();
 
 	GJChallengeItem* getCompletedQuest(char const * desc);
 	bool parseQuestInfo(char const * desc, int * amount, GJChallengeType * type);
