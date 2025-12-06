@@ -96,29 +96,22 @@ void GameStatsManagerAQ::tryGetChallenges() {
 } // tryGetChallenges
 
 void GameStatsManagerAQ::Fields::challengeStatusFinished() {
-	log::info("challenge status finished");
+	log::info("Load quests finished!");
 	m_getQuestTries = 0;
 
-	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::info("before {}: {}", key, val->m_name);
-	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::info("before queued {}: {}", key, val->m_name);
-
+	// Moved queued quests to the active state if possible
 	for (int i = 1; i <= 3; i++) {
 		if (!stats->getChallenge(i)) stats->processChallengeQueue(i);
 	} // for
-
-	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::info("after {}: {}", key, val->m_name);
-	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::info("after queued {}: {}", key, val->m_name);
 } // challengeStatusFinished
 
 void GameStatsManagerAQ::Fields::challengeStatusFailed() {
 	if (stats->areChallengesLoaded() || stats->getActionByTag(5)) return;
-	log::error("challenge status failed {}", m_getQuestTries);
-
-	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::error("{}: {}", key, val->m_name);
-	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::error("queued {}: {}", key, val->m_name);
+	log::debug("Load quests failed, retrying request...");
 
 	// Stop trying to get challenges after 30 seconds
 	if (m_getQuestTries > 6) {
+		log::warn("Load quests failed!");
 		m_getQuestTries = 0;
 		return;
 	} // if
