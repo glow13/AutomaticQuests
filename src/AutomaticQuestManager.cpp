@@ -96,11 +96,17 @@ void GameStatsManagerAQ::tryGetChallenges() {
 
 void GameStatsManagerAQ::Fields::challengeStatusFinished() {
 	log::info("challenge status finished");
+
+	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::info("{}: {}", key, val->m_name);
+	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::info("queued {}: {}", key, val->m_name);
 } // challengeStatusFinished
 
 void GameStatsManagerAQ::Fields::challengeStatusFailed() {
 	if (stats->areChallengesLoaded() || stats->getActionByTag(5)) return;
 	log::error("challenge status failed");
+
+	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::error("{}: {}", key, val->m_name);
+	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::error("queued {}: {}", key, val->m_name);
 
 	auto func = callfunc_selector(GameStatsManagerAQ::tryGetChallenges);
 	auto action = CCSequence::create(CCDelayTime::create(5), CCCallFunc::create(stats, func), 0);
