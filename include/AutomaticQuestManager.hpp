@@ -11,6 +11,7 @@ class $modify(GameStatsManagerAQ, GameStatsManager) {
 
 		int m_totalRewards = 0;
 		bool m_completed[4] = {false, false, false, false};
+		int m_getQuestTries = 0;
 
 		void challengeStatusFinished() override;
 		void challengeStatusFailed() override;

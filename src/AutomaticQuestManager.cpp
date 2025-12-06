@@ -87,6 +87,7 @@ void GameStatsManagerAQ::tryGetChallenges() {
 	if (areChallengesLoaded()) return;
 
 	auto fields = m_fields.self();
+	fields->m_getQuestTries++;
 	fields->stats = this;
 
 	auto manager = GameLevelManager::sharedState();
@@ -96,6 +97,7 @@ void GameStatsManagerAQ::tryGetChallenges() {
 
 void GameStatsManagerAQ::Fields::challengeStatusFinished() {
 	log::info("challenge status finished");
+	m_getQuestTries = 0;
 
 	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::info("before {}: {}", key, val->m_name);
 	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::info("before queued {}: {}", key, val->m_name);
@@ -110,10 +112,16 @@ void GameStatsManagerAQ::Fields::challengeStatusFinished() {
 
 void GameStatsManagerAQ::Fields::challengeStatusFailed() {
 	if (stats->areChallengesLoaded() || stats->getActionByTag(5)) return;
-	log::error("challenge status failed");
+	log::error("challenge status failed {}", m_getQuestTries);
 
 	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::error("{}: {}", key, val->m_name);
 	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::error("queued {}: {}", key, val->m_name);
+
+	// Stop trying to get challenges after 30 seconds
+	if (m_getQuestTries > 6) {
+		m_getQuestTries = 0;
+		return;
+	} // if
 
 	auto func = callfunc_selector(GameStatsManagerAQ::tryGetChallenges);
 	auto action = CCSequence::create(CCDelayTime::create(5), CCCallFunc::create(stats, func), 0);
