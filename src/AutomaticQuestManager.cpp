@@ -97,8 +97,15 @@ void GameStatsManagerAQ::tryGetChallenges() {
 void GameStatsManagerAQ::Fields::challengeStatusFinished() {
 	log::info("challenge status finished");
 
-	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::info("{}: {}", key, val->m_name);
-	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::info("queued {}: {}", key, val->m_name);
+	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::info("before {}: {}", key, val->m_name);
+	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::info("before queued {}: {}", key, val->m_name);
+
+	for (int i = 1; i <= 3; i++) {
+		if (!stats->getChallenge(i)) stats->processChallengeQueue(i);
+	} // for
+
+	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_activeChallenges)) log::info("after {}: {}", key, val->m_name);
+	for (auto [key, val] : CCDictionaryExt<std::string, GJChallengeItem*>(stats->m_upcomingChallenges)) log::info("after queued {}: {}", key, val->m_name);
 } // challengeStatusFinished
 
 void GameStatsManagerAQ::Fields::challengeStatusFailed() {
