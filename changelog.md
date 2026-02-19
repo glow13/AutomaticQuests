@@ -1,3 +1,7 @@
+# 1.1.1
+- Added 2.2081 support.
+- Updated for Geode v5.
+
 # 1.1.0
 - Completely restructured and reworked most of the mod's code.
 - Finally fixed a bug that would sometimes incorrectly fetch new quests when starting the game.
