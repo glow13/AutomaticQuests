@@ -38,6 +38,8 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 		} // switch
 	} else {
 		auto currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+		if (stats->m_challengeTime < 1048576) currentTime &= 1048575; // This attempts to fix the timer trim bug that misc bugfixes also fixes
+
 		auto timeLeft = (currentTime < stats->m_challengeTime) ? stats->m_challengeTime - currentTime : 0;
 		newDesc += (std::string)GameToolbox::getTimeString(timeLeft, true) + ".";
 	} // if
