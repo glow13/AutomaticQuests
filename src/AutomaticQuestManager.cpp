@@ -103,6 +103,11 @@ void GameStatsManagerAQ::Fields::challengeStatusFinished() {
 	for (int i = 1; i <= 3; i++) {
 		if (!stats->getChallenge(i)) stats->processChallengeQueue(i);
 	} // for
+
+	auto currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	if (stats->m_challengeTime < 1048576) currentTime &= 1048575;
+	auto timeLeft = (currentTime < stats->m_challengeTime) ? stats->m_challengeTime - currentTime : 0;
+	log::info("debug times\ncurrent time: {}\nchallenge time: {}\ntime left: {}", currentTime, stats->m_challengeTime, timeLeft);
 } // challengeStatusFinished
 
 void GameStatsManagerAQ::Fields::challengeStatusFailed() {
