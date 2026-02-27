@@ -1,3 +1,7 @@
+# 1.1.2
+- Fixed a timer bug when showing the time remaining until the new quests appear.
+- Updated Geode version to v5.1.0.
+
 # 1.1.1
 - Added 2.2081 support.
 - Updated for Geode v5.
