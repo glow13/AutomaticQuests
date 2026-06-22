@@ -1,3 +1,8 @@
+![Mod Version](https://api.geode-sdk.org/v1/mods/glow12.automaticquests/status_badge?stat=version)
+![Downloads](https://api.geode-sdk.org/v1/mods/glow12.automaticquests/status_badge?stat=downloads)
+![GD Version](https://api.geode-sdk.org/v1/mods/glow12.automaticquests/status_badge?stat=gd_version)
+![Geode Version](https://api.geode-sdk.org/v1/mods/glow12.automaticquests/status_badge?stat=geode_version)
+
 # Automatic Quests
 
 Have you ever forgotten to claim a completed quest, then collected a lot of rewards, then got frustrated that you missed out on using those rewards to make progress on the next quest?
