@@ -1,12 +1,12 @@
-#include "AutomaticQuestManager.hpp"
+#include "../AutomaticQuestManager.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
 class $modify(PlayLayer) {
 
     // Reset stats before starting a level to avoid any visual bugs
-    bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
-        if (!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
+    bool init(GJGameLevel* level, bool dontCreateObjects) {
+        if (!PlayLayer::init(level, dontCreateObjects)) return false;
 
         auto stats = GameStatsManagerAQ::sharedState();
         stats->resetQuestRewards();

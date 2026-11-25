@@ -1,4 +1,4 @@
-#include "AutomaticQuestManager.hpp"
+#include "../AutomaticQuestManager.hpp"
 
 #include <Geode/modify/EndLevelLayer.hpp>
 

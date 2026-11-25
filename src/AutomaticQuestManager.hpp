@@ -39,7 +39,7 @@ namespace AutomaticQuests {
 		return Mod::get()->getSettingValue<bool>("disable-mod");
 	} // isModEnabled
 
-	inline bool isFeatureDisabled(gd::string setting) {
+	inline bool isFeatureDisabled(std::string setting) {
 		return isModDisabled() || Mod::get()->getSettingValue<bool>(setting);
 	} // isSettingEnabled
 

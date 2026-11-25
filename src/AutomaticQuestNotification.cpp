@@ -66,7 +66,8 @@ bool AchievementBarAQ::init(char const * title, char const * desc, char const * 
 		m_achievementDescription->m_width,
 		m_achievementDescription->m_anchorPoint,
 		m_achievementDescription->m_height,
-		m_achievementDescription->m_disableColor
+		m_achievementDescription->m_disableColor,
+		m_achievementDescription->m_maxEmoji
 	);
 	newAchievementDescription->setPosition(m_achievementDescription->getPosition());
 	newAchievementDescription->setScale(m_achievementDescription->getScale());
